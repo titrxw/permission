@@ -14,7 +14,6 @@ export default [
         },
         component: (resolve) => require(['../views/index.vue'], resolve)
       },
-      
       {
         path: '403',
         component: (resolve) => { require(['../views/system/403'], resolve) }

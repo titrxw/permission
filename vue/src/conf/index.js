@@ -3,6 +3,8 @@ import '../env'
 import DevConf from './dev'
 import ProducationConf from './producation'
 
+Vue.onlineHour = 2
+
 if (Vue.ENV_PRODUCATION) {
     Vue.prototype.G = ProducationConf
     Vue.imgHost = 'http://zh5j.cn/uploads/'
