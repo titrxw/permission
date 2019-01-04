@@ -2,7 +2,6 @@
   <div class="container">
     <div id="particles"></div>
     <div class="enter-form">
-      <h1>我要入驻</h1>
       <Form class="form" :label-width="0" ref="form" :model="form" :rules="validateRule">
         <FormItem prop="real_name">
           <Input placeholder="请输入联系人姓名" v-model="form.real_name"></Input>
@@ -10,25 +9,14 @@
         <FormItem prop="mobile">
           <Input placeholder="请输入手机号码" v-model="form.mobile"></Input>
         </FormItem>
-        <FormItem prop="name">
-          <Input placeholder="请输入商家名称" v-model="form.name"></Input>
-        </FormItem>
-        <FormItem prop="credit_code">
-          <Input placeholder="请输入企业统一社会信用代码" v-model="form.credit_code"></Input>
-        </FormItem>
-        <FormItem prop="business_licence">
-          <p>请上传营业执照</p>
-          <Upload :multiple="true" v-model="form.business_licence"></Upload>
-        </FormItem>
-
-        <Button type="success" long @click.native="submit">提交</Button>
+        <Button type="success" long @click.native="submit">登录</Button>
       </Form>
     </div>
   </div>
 </template>
 <script>
-import Upload from "@/components/uploader";
 import "particles.js";
+import FormValidate from '@/libs/formValidate'
 import api from "@/api";
 export default {
   data() {
@@ -44,39 +32,19 @@ export default {
     };
     return {
       form: {
-        real_name: "",
-        mobile: "",
-        name: "",
-        credit_code: "",
-        business_licence: ""
+        password: "",
+        mobile: ""
       },
       validateRule: {
-        name: [
-          { required: true, message: "商家名称不能为空", trigger: "change" }
+        password: [
+          { required: true, message: "请输入密码", trigger: "change" }
         ],
         mobile: [
           {
             required: true,
-            validator: validateMobile,
+            validator: FormValidate.mobile,
             trigger: "change"
           }
-        ],
-        real_name: [
-          {
-            required: true,
-            message: "商家联系人姓名不能为空",
-            trigger: "change"
-          }
-        ],
-        credit_code: [
-          {
-            required: true,
-            message: "企业统一社会信用代码不能为空",
-            trigger: "change"
-          }
-        ],
-        business_licence: [
-          { required: true, message: "商家营业执照不能为空", trigger: "change" }
         ]
       }
     };

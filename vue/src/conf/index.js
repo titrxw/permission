@@ -48,6 +48,3 @@ Vue.use(VueHtml5Editor, {
         }
     }
 });
-
-import Print from 'vue-print-nb'
-Vue.use(Print); //注册

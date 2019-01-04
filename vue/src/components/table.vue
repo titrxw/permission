@@ -15,18 +15,21 @@
       @on-selection-change="selectionChange"
       ref="table"
       border
+      :loading="loading"
       highlight-row
       :no-data-text="noDataText"
       :columns="columns"
       :data="data.data"
     ></Table>
-    <Row type="flex" v-if="data.total" justify="space-between">
-      <div>
+    <Row class="foot-toolbar" type="flex" justify="space-between">
+      <Col span="6">
         <slot name="foot-operate"></slot>
-      </div>
-      <div>
+      </Col>
+      <Col span="18">
+        <div>
         <Page
           class="page"
+          v-if="data.total"
           :total="data.total"
           show-total
           show-elevator
@@ -34,6 +37,7 @@
           @on-change="loadDataByPage"
         ></Page>
       </div>
+      </Col>
     </Row>
   </div>
 </template>
@@ -68,6 +72,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       page: 1,
       data: {
         data: [],
@@ -89,7 +94,7 @@ export default {
       if (!this.getData) {
         return false;
       }
-
+      this.loading = true
       let params = {
         page: this.page
       };
@@ -109,7 +114,8 @@ export default {
           data: [],
           total: 0
         };
-      }
+      }      
+      this.loading = false
     },
     reload() {
       this.isSearch = false
@@ -171,10 +177,17 @@ export default {
       margin-bottom: 0;
     }
   }
-  .page {
-    text-align: right;
-    margin: 10px;
+  .foot-toolbar {
+    margin-top: 15px !important;
+    margin-bottom: 15px !important;
+    padding-bottom: 15px !important;
+    border-bottom: 1px dashed #eeeff1;
+    .page {
+      text-align: right;
+      margin: 10px;
+    }
   }
+  
   .ivu-form-item {
     margin-bottom: 0px !important;
   }

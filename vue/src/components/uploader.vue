@@ -114,17 +114,12 @@
                 this.large_img_url = url;
                 this.large_img_show = true;
             },
-        },
-        mounted () {
-            if(this.upload) this.uploaders = this.$refs.upload.fileList;
-        },
-        watch: {
-            value: function(val, val2){
+            init () {
                 let t = [];
-                if (val){
+                this.urls = '';
+                if (this.value != ""){
                     let _self = this
-                    _self.urls = '';
-                    val.split(',').forEach(function(url, index, item){
+                    this.value.split(',').forEach(function(url, index, item){
                         t.push({url: url});
                         if (_self.urls){
                             _self.urls += ',' + url
@@ -135,6 +130,15 @@
                 }
 
                 this.uploaders = t;
+            }
+        },
+        mounted () {
+            if(this.upload) this.uploaders = this.$refs.upload.fileList;
+            this.init()
+        },
+        watch: {
+            value: function(val, val2){
+                this.init()
             }
         }
     };
