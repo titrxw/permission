@@ -21,7 +21,7 @@ export default {
       callback(new Error('请输入正确的二代身份证号码'))
     }
   },
-  password () {
+  password (rule, value, callback) {
     if (!value) {
       return callback(new Error('请输入密码'))
     }
