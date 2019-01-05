@@ -20,33 +20,3 @@ if (Vue.ENV_PRODUCATION) {
     Vue.prototype.uploadHost = Vue.uploadHost
     Vue.prototype.imgHost = Vue.imgHost
 }
-
-
-import VueHtml5Editor from 'vue-html5-editor';
-Vue.use(VueHtml5Editor, {
-    hiddenModules: [
-        "info"
-    ],
-    image: {
-        sizeLimit: 800 * 1024,
-        compress: true,
-        width: 640,
-        quality: 60,
-        upload: {
-            url: Vue.uploadHost,
-            headers: {},
-            params: {
-                token: sessionStorage.getItem('token')
-            },
-            fieldName: "file"
-        },
-        uploadHandler(responseText) {
-            var res = JSON.parse(responseText)
-            if (res.ret != 200) {
-                console.log(res.msg)
-            } else {
-                return Vue.imgHost + res.data.url
-            }
-        }
-    }
-});
