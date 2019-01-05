@@ -1,6 +1,6 @@
 <template>
 <div>
-	<Table ref="table" title="角色管理" :columns="column" :getData="fetchList">
+	<Table ref="table" title="操作管理" :columns="column" :getData="fetchList">
 		<Button slot="table-operate" type="success" @click.native="edit.id = 0;edit.show = true;">添加</Button>
 	</Table>
 	<Edit v-model="edit.show" :rowId="edit.id"></Edit>
@@ -10,7 +10,7 @@
 <script>
 import api from '@/api';
 import Table from '@/components/table';
-import Edit from './edit'
+import Edit from './operate_sedit'
 export default {
 	components:{
 		Table,
@@ -30,6 +30,21 @@ export default {
 				},
 				{
 					title:'名称',
+					key:'name',
+					align:'center'
+				},
+				{
+					title:'别名',
+					key:'name',
+					align:'center'
+				},
+				{
+					title:'上级模块',
+					key:'name',
+					align:'center'
+				},
+				{
+					title:'链接',
 					key:'name',
 					align:'center'
 				},

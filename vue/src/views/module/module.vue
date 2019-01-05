@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="panel-heading">部门结构</div>
+    <div class="panel-heading">模块管理</div>
     <Row style="margin-top:15px;margin-bottom:15px;padding-left:20px;">
       <Button type="info" @click="add">添加</Button>
     </Row>
@@ -16,10 +16,10 @@
           :label-width="140"
           style="width:500px;"
         >
-          <FormItem label="部门名称" prop="name">
-            <Input v-model="form.data.name" placeholder="请输入部门名称"></Input>
+          <FormItem label="模块名称" prop="name">
+            <Input v-model="form.data.name" placeholder="请输入模块名称"></Input>
           </FormItem>
-          <FormItem label="上级部门">
+          <FormItem label="上级模块">
             <Select v-model="form.data.parent_id">
               <Option :value="0">请选择</Option>
               <Option
@@ -29,8 +29,8 @@
               >{{ item.title }}</Option>
             </Select>
           </FormItem>
-          <FormItem label="别名">
-            <Input v-model="form.data.alias" placeholder="请输入部门别名"></Input>
+          <FormItem label="描述">
+            <Input v-model="form.data.remark" placeholder="请输入模块描述"></Input>
           </FormItem>
           <FormItem label="启用">
             <i-switch v-model="form.data.status" size="large" :trueValue="1" :falseValue="0">
@@ -63,8 +63,8 @@ export default {
         data: {
           parent_id: 0,
           name: "",
-          alias: "",
-          status: 1
+          status: 1,
+          remark: ''
         },
         rules: {
           name: [
@@ -111,11 +111,11 @@ export default {
     del() {
       this.$Modal.confirm({
         title: "提示",
-        content: "确定要删除该部门？",
+        content: "确定要删除该分类？",
         onOk: async () => {
           let result = await api.deleteDepartment({ id: this.form.data.id });
           if (result) {
-            this.$Notice.success({ title: "提示", desc: "部门删除成功" });
+            this.$Notice.success({ title: "提示", desc: "分类删除成功" });
             this.fetchList();
             this.reset();
           }
@@ -126,8 +126,8 @@ export default {
       this.form.data = {
         parent_id: 0,
         name: "",
-        alias: "",
-        status: 1
+        status: 1,
+        remark: ''
       };
     },
     async fetchList() {

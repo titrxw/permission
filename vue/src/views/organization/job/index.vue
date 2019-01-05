@@ -33,6 +33,27 @@ export default {
 					key:'name',
 					align:'center'
 				},
+        {
+          title: "启用",
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "i-switch",
+                {
+                  props: {
+                    trueValue: 1,
+                    falseValue: 0
+                  },
+                  on: {
+                    click: () => {}
+                  }
+                },
+                params.row.status_text
+              )
+            ]);
+          }
+        },
 				{
 					title:'操作',
 					key:'',
