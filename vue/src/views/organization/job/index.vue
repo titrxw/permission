@@ -1,6 +1,6 @@
 <template>
 <div>
-	<Table ref="table" title="角色管理" :columns="column" :getData="fetchList">
+	<Table ref="table" title="职位管理" :columns="column" :getData="fetchList">
 		<Button slot="table-operate" type="success" @click.native="edit.id = 0;edit.show = true;">添加</Button>
 	</Table>
 	<Edit v-model="edit.show" :rowId="edit.id"></Edit>

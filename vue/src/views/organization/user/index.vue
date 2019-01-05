@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Table ref="table" title="用户管理" :columns="column" :search="search" :getData="getData">
+    <Table ref="table" title="员工管理" :columns="column" :search="search" :getData="getData">
       <Form slot="table-operate">
         <Button type="primary" @click="add.show = true;add.id = 0;">添加</Button>
       </Form>
@@ -19,37 +19,21 @@
         </FormItem>
       </Form>
     </Table>
-    <Edit v-model="add.show" :rowId="add.id" @updateList="$refs['table'].fresh()"></Edit>
-    <Operation v-model="OperStatus" :id='rowId' @loadList='loadList'></Operation>
-     <Modal
-        v-model="modelStatus"
-        title="提示"
-        @on-ok="sub"
-        @on-cancel="cancel">
-        <p>是否{{nowData.enabled_status==1?"禁用":"开启"}}此用户？</p>
-    </Modal>
+    <Edit v-model="add.show" :rowId="add.id" @update-list="$refs['table'].fresh()"></Edit>
   </div>
 </template>
 <script>
 import Edit from "./edit.vue";
-import Operation from "./operation.vue";
 import api from "@/api";
 import Table from "@/components/table";
 
 export default {
   components: {
     Edit,
-    Operation,
     Table
   },
   data() {
     return {
-      rowId:0,
-      modelStatus:false,
-      OperStatus:false,
-      nowData:{
-
-      },
       add: {
         show: false,
         id: 0
@@ -75,7 +59,7 @@ export default {
                 on: {
                   click: () => {
                     this.$router.push(
-                      "/organization/manager/detail?id=" + params.row.id
+                      "/organization/user/detail?id=" + params.row.id
                     );
                   }
                 }
@@ -106,50 +90,17 @@ export default {
           render: (h, params) => {
             return h("div", [
               h(
-                "div",
+                "i-switch",
                 {
-                  style: {
-                    color: params.row.status==2?'blue':'',
-                    cursor:params.row.status==2?'pointer':''
+                  props: {
+                    trueValue: 1,
+                    falseValue: 0
                   },
                   on: {
-                    click: () => {
-                      if(params.row.status!=2)return false;
-
-                      this.OperStatus = true;
-                      console.log(params.row.id)
-                      this.rowId = params.row.id;
-                    }
+                    click: () => {}
                   }
                 },
                 params.row.status_text
-              )
-            ]);
-          }
-        },
-        {
-          title: "状态",
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      this.modelStatus = true;
-                      this.nowData = params.row;
-                    }
-                  }
-                },
-                params.row.enabled_status==1?"禁用":"开启"
               )
             ]);
           }
@@ -211,25 +162,6 @@ export default {
     };
   },
   methods: {
-    loadList(e){
-      this.OperStatus = e;
-      this.$refs["table"].reload();
-    },
-    async sub(){
-      let result = await api.changeManagerStatus({
-        id:this.nowData.id,
-        status:this.nowData.enabled_status==1?2:1
-      });
-      if(result){
-        this.nowData={};
-        this.modelStatus = false;
-        this.$refs["table"].reload();
-      }
-    },
-    cancel(){
-      this.modelStatus = false;
-      this.nowData = {};
-    },
     getData(params) {
       let searchData = [];
       if (this.search.value != "") {
@@ -237,7 +169,7 @@ export default {
       }
       searchData["status"] = this.search_status;
 
-      return [api.managerList, params,searchData];
+      return [api.managerList, params, searchData];
     }
   },
   mounted() {
