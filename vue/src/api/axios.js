@@ -8,7 +8,41 @@ import store from '../store'
 // axios 配置
 axios.defaults.timeout = 50000;
 axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-axios.defaults.baseURL = Vue.apiHost;
+axios.defaults.baseURL = Vue.apiHost
+
+
+axios.before = function () {
+  Vue.submit && Vue.submit()
+}
+
+axios.after = function () {
+  Vue.unSubmit && Vue.unSubmit()
+}
+
+axios.tpost = axios.post
+axios.tget = axios.get
+
+axios.post = async (url, data, header = {}) => {
+  if (axios.before) {
+    axios.before()
+  }
+  let result = await axios.tpost(url, data, header)
+  if (axios.after) {
+    axios.after()
+  }
+  return result
+}
+
+axios.get = async (url, data, header = {}) => {
+  if (axios.before) {
+    axios.before()
+  }
+  let result = await axios.tget(url, data, header)
+  if (axios.after) {
+    axios.after()
+  }
+  return result
+}
 
 // http request 拦截器
 axios.interceptors.request.use(
@@ -50,14 +84,17 @@ axios.interceptors.response.use(
     switch (response.data.ret) {
       case 200:
         return response.data.data ? response.data.data : true;
+        break;
       case 300:
         sessionStorage.removeItem('user');
         sessionStorage.removeItem('token');
         router.push({ path: '/login' });
         return false;
+        break;
       case 403:
         router.push({ path: '/403' });
         return false;
+        break;
       default:
         if (response.data.msg !== undefined) {
           if (response.data.msg) {
@@ -66,6 +103,7 @@ axios.interceptors.response.use(
           return false;
         }
         return response.data
+        break;
     }
   },
   error => {
