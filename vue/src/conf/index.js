@@ -4,7 +4,7 @@ import ProducationConf from './producation'
 
 Vue.onlineHour = 2
 
-if (Vue.ENV_PRODUCATION) {
+if (process.env.NODE_ENV === 'production') {
     Vue.prototype.G = ProducationConf
     Vue.imgHost = 'http://zh5j.cn/uploads/'
     Vue.uploadHost = 'http://zh5j.cn/upload/homeservice/admin_sysframe/upload'

@@ -4,7 +4,7 @@ import ajax from '../api/axios'
 const errorHandler = (error, vm) => {
   console.error(vm)
   console.error(error)
-  if (Vue.ENV_PRODUCATION) {
+  if (process.env.NODE_ENV === 'production') {
     let log = {
       data: vm._data,
       route: vm.$route.fullPath,

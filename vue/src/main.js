@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import './env'
 import './conf'
 import error from './libs/error'
 import api from './api'
