@@ -1,7 +1,7 @@
 import ajax from './axios'
 
 
-export default {
+let api = {
   login: (params) => {
     return ajax.post('admin_syscommon/login', params)
   },
@@ -13,5 +13,11 @@ export default {
   },
   setting: (params) => {
     return ajax.post('admin_sysframe/setting', params)
+  }
+}
+
+export default {
+  install: function (Vue) {
+    Vue.prototype.$api = api
   }
 }
