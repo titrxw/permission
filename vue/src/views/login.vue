@@ -17,34 +17,23 @@
 <script>
 import "particles.js";
 import FormValidate from '@/libs/formValidate'
-import api from "@/api";
 export default {
   data() {
-    const validateMobile = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入管家手机号码"));
-      } else {
-        if (/^1\d{10}$/.test(value)) {
-          callback();
-        }
-        callback(new Error("请输入正确的手机号码"));
-      }
-    };
     return {
       form: {
         password: "",
         mobile: ""
       },
       validateRule: {
-        password: [
-          { required: true, message: "请输入密码", trigger: "change" }
-        ],
         mobile: [
           {
             required: true,
             validator: FormValidate.mobile,
             trigger: "change"
           }
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "change" }
         ]
       }
     };
@@ -53,22 +42,14 @@ export default {
     submit() {
       this.$refs["form"].validate(async result => {
         if (result) {
-          let res = await api.addCompany(this.form);
+          let res = await this.$api.login(this.form);
           if (res) {
-            this.$Notice.success({
-              title: "提示",
-              desc: "入驻申请提交成功"
-            });
-            this.$refs["form"].resetFields();
+            this.$router.replace('/')
           }
         }
       });
     }
   },
-  components: {
-    Upload
-  },
-
   mounted() {
     particlesJS("particles", {
       particles: {

@@ -1,23 +1,13 @@
 import ajax from './axios'
+import auth from './auth'
 
 
 let api = {
-  login: (params) => {
-    return ajax.post('admin_syscommon/login', params)
-  },
-  logout: (params) => {
-    return ajax.post('admin_sysframe/logout', params)
-  },
-  password: (params) => {
-    return ajax.post('admin_sysframe/password', params)
-  },
-  setting: (params) => {
-    return ajax.post('admin_sysframe/setting', params)
-  }
+    ...auth
 }
 
 export default {
-  install: function (Vue) {
-    Vue.prototype.$api = api
-  }
+    install: function(Vue) {
+        Vue.prototype.$api = api
+    }
 }

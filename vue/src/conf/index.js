@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'production') {
     Vue.prototype.G = DevConf
     Vue.imgHost = 'http://zh5j.cn/uploads/'
     Vue.uploadHost = 'http://zh5j.cn/upload/homeservice/admin_sysframe/upload'
-    Vue.apiHost = '/homeservice'
+    Vue.apiHost = '/permiss'
     Vue.prototype.uploadHost = Vue.uploadHost
     Vue.prototype.imgHost = Vue.imgHost
 }
