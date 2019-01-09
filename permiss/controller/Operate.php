@@ -2,32 +2,34 @@
 /**
  * Created by PhpStorm.
  * User: rxw
- * Date: 2017/8/27
- * Time: 20:58
+ * Date: 2019/1/9
+ * Time: 20:45
  */
 namespace permiss\controller;
+
 use permiss\lib\User;
 
-class Module extends User
+class Operate extends User
 {
-    protected $_moduleM;
+    protected $_operateM;
 
     protected function afterInit()
     {
-        $this->_moduleM = $this->model('Module');
+        $this->_operateM = $this->model('Operate');
     }
 
     /**
      * @method post
-     * 
-     * @rule form.name|post|模块名称错误 require
-     * @rule form.pid|post|上级模块错误 integer
+     *
+     * @rule form.name|post|功能名称错误 require
+     * @rule form.url|post|链接错误 require
+     * @rule form.mid|post|所属模块错误 integer
      * @rule form.status|post|启用状态错误 integer
      */
     public function saveApi()
     {
         $form = $this->request->post('form');
-        $result = $this->_moduleM->save($form);
+        $result = $this->_operateM->save($form);
         if ($result) {
             return [200, true];
         }
@@ -36,36 +38,36 @@ class Module extends User
 
     /**
      * @method get
-     * 
+     *
      */
     public function listApi()
     {
-        $result = $this->_moduleM->getAll();
+        $result = $this->_operateM->getAll();
         return [200, $result];
     }
 
     /**
      * @method get
-     * 
-     * @rule id|get|模块id错误 integer
+     *
+     * @rule id|get|功能id错误 integer
      */
     public function getApi($id)
     {
-        $result = $this->_moduleM->get($id);
+        $result = $this->_operateM->get($id);
         if ($result) {
             return [200, $result];
         }
-        return [400, '不存在该模块'];
+        return [400, '不存在该功能'];
     }
 
     /**
      * @method get
-     * 
+     *
      * @rule id|get|模块id错误 integer
      */
     public function deleteApi($id)
     {
-        $result = $this->_moduleM->delete($id);
+        $result = $this->_operateM->delete($id);
         if ($result) {
             return [200, true];
         }

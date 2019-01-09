@@ -15,7 +15,7 @@ class Depart extends Model
 
     public function save($data)
     {
-      $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name'], 'parent_id' => $data['parent_id']]);
+      $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name'], 'pid' => $data['pid']]);
       if ($exists) {
         return false;
       }

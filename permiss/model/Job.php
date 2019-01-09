@@ -11,7 +11,7 @@ use framework\base\Model;
 
 class Job extends Model
 {
-  protected $_table = 'job';
+    protected $_table = 'job';
 
     public function save($data)
     {

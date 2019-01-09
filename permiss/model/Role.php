@@ -2,20 +2,20 @@
 /**
  * Created by PhpStorm.
  * User: rxw
- * Date: 2017/9/5
- * Time: 21:05
+ * Date: 2019/1/9
+ * Time: 21:00
  */
 namespace permiss\model;
 
 use framework\base\Model;
 
-class Module extends Model
+class Role extends Model
 {
-    protected $_table = 'module';
+    protected $_table = 'role';
 
     public function save($data)
     {
-        $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name'], 'pid' => $data['pid']]);
+        $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name']]);
         if ($exists) {
             return false;
         }
@@ -28,7 +28,7 @@ class Module extends Model
 
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
         } else {
-            $data['uid'] = 'm-' . uniqueId();
+            $data['uid'] = 'j-' . uniqueId();
             $result = $this->db()->insert($this->_table, $data);
         }
 
@@ -58,3 +58,4 @@ class Module extends Model
         return false;
     }
 }
+
