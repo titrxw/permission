@@ -10,27 +10,65 @@ use permiss\lib\User;
 
 class Department extends User
 {
+    protected $_departM;
+
     protected function afterInit()
     {
+        $this->_departM = $this->model('Depart');
     }
 
-    public function addApi()
+    /**
+     * @method post
+     * 
+     * @rule form.name|post|部门名称错误 require
+     * @rule form.parent_id|post|上级部门错误 integer
+     * @rule form.status|post|启用状态错误 integer
+     */
+    public function saveApi()
     {
-
+        $form = $this->request->post('form');
+        $result = $this->_departM->save($form);
+        if ($result) {
+            return [200, true];
+        }
+        return [501, '操作失败'];
     }
 
-    public function getApi()
+    /**
+     * @method get
+     * 
+     */
+    public function listApi()
     {
-
+        $result = $this->_departM->getAll();
+        return [200, $result];
     }
 
-    public function deleteApi()
+    /**
+     * @method get
+     * 
+     * @rule id|get|部门id错误 integer
+     */
+    public function getApi($id)
     {
-
+        $result = $this->_departM->get($id);
+        if ($result) {
+            return [200, $result];
+        }
+        return [400, '不存在该部门'];
     }
 
-    public function updateApi()
+    /**
+     * @method get
+     * 
+     * @rule id|get|部门id错误 integer
+     */
+    public function deleteApi($id)
     {
-      
+        $result = $this->_departM->delete($id);
+        if ($result) {
+            return [200, true];
+        }
+        return [400, '删除失败'];
     }
 }
