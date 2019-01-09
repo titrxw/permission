@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Routers from './router';
+import login from './login'
 import iView from 'iview';
 Vue.use(VueRouter);
 
@@ -16,26 +17,7 @@ router.beforeEach((to, from, next) => {
   document.title = title
   iView.LoadingBar.start();
 
-  // 检测token是否过期 2小时在线（前5分钟过期）
-  let lastTime = sessionStorage.getItem('last_login_time')
-  let curTime = Date.parse(new Date()) / 1000;
-  if (lastTime && (curTime - lastTime) > ( Vue.onlineHour * 60 * 55 )) {
-    sessionStorage.removeItem('token')
-  }
-
-  if (to.meta.requireAuth) {
-    let user = sessionStorage.getItem('user');
-    if (!user) {
-      next({
-        path: '/login',
-        query: {
-          redirect: to.fullPath
-        }
-      })
-    } else {
-      next()
-    }
-  } else {
+  if (login(to, from, next)) {
     next()
   }
 });

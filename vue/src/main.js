@@ -15,12 +15,12 @@ Vue.use(api);
 Vue.use(iView);
 
 
-// 点击后等待请求完成才可以再点击  利用自定义指令实现        使用时需要在标签上添加v-submit
-Vue.submit = function () {
+
+Vue.beforeRequest = function () {
   Vue.hasSubmit = true
 }
 
-Vue.unSubmit = function () {
+Vue.afterRequest = function () {
   Vue.hasSubmit = false
 }
 

@@ -10,7 +10,7 @@ export default [
       {
         path: '/',
         meta: {
-          requireAuth: true
+          requireLogin: true
         },
         component: (resolve) => require(['../views/index.vue'], resolve)
       },

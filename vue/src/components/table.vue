@@ -98,23 +98,28 @@ export default {
       let params = {
         page: this.page
       };
-      let result = this.getData(params);
-      params = result[1];
-      if (this.isSearch && result[2]) {
-        params = { ...params, ...result[2] };
-      }
-      result = await result[0](params);
-      if (result) {
-        if (this.after) {
-          result = this.after(result)
+      try{
+        let result = this.getData(params);
+        params = result[1];
+        if (this.isSearch && result[2]) {
+          params = { ...params, ...result[2] };
         }
-        this.data = result;
-      } else {
-        this.data = {
-          data: [],
-          total: 0
-        };
-      }      
+        result = await result[0](params);
+        if (result) {
+          if (this.after) {
+            result = this.after(result)
+          }
+          this.data = result;
+        } else {
+          this.data = {
+            data: [],
+            total: 0
+          };
+        }      
+      } catch (e) {
+        this.$throw(e)
+      }
+      
       this.loading = false
     },
     reload() {
