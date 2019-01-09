@@ -20,7 +20,7 @@ abstract class User extends Api
         if (!$token) {
             return ['ret' => 302, 'msg' => 'login false'];
         }
-        if (!($user = $this->redis->get($token))) {
+        if (!($user = $this->token->get($token))) {
             return ['ret' => 301, 'msg' => 'login false'];
         }
 

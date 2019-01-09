@@ -17,9 +17,16 @@ return array(
         'tokenBucket' => 'framework\\tokenbucket\\Bucket',
         'apireset' => 'blog\\lib\\ApiReset',
         'redis' => 'framework\\components\\cache\\Redis',
-        'uniqueid' => 'framework\\components\\uniqueid\\UniqueId'
+        'uniqueid' => 'framework\\components\\uniqueid\\UniqueId',
+        'aes' => 'framework\\components\\security\\Aes7',
+        'token' => 'framework\\components\\security\\Token'
     ), 
     'components' => array(
+        'aes' => [
+            'key' => 'gtifhaisdgthrehagtifhaisdgthreha',
+            'iv' => 'gtifhaisdgthreha',
+            'code' => 'hex'
+        ],
         'controller' => [
             'controller' => [
                 'prefix' => '',
