@@ -38,7 +38,6 @@
     </div>
 </template>
 <script>
-import api from "../api";
 export default {
   data() {
     return {
@@ -62,7 +61,7 @@ export default {
     }
   },
   mounted: function() {
-      api.setting({ scope: "role", field: "menu" }).then(res => {
+      this.$api.menu().then(res => {
         this.menu = res;
       });
   }

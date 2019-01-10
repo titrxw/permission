@@ -8,6 +8,23 @@
 namespace permiss\controller;
 use permiss\lib\User;
 
+function tree($data)
+{
+    $pid = 'pid';
+    $tmp = [];
+    $data = array_combine(array_column($data,'id'), $data);
+
+    foreach ($data as $item) {
+        if(isset($data[$item['pid']])){
+            $data[$item['pid']]['children'][] =& $data[$item['id']];
+        }else{
+            $tree['children'][] =& $data[$item['id']];
+        }
+    }
+
+    return $tree;
+}
+
 class Module extends User
 {
     protected $_moduleM;
@@ -41,7 +58,7 @@ class Module extends User
     public function listApi()
     {
         $result = $this->_moduleM->getAll();
-        return [200, $result];
+        return [200, tree($result)];
     }
 
     /**

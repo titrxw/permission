@@ -17,7 +17,7 @@ router.beforeEach((to, from, next) => {
     document.title = title
     iView.LoadingBar.start();
 
-    if (login.validate(to, from, next)) {
+    if (login(to, from, next)) {
         next()
     }
 });

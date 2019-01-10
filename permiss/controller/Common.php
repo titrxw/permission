@@ -36,8 +36,7 @@ class Common extends Web
         }
         $user = $this->_userM->register($name, $mobile, $password);
         if ($user) {
-            $this->saveUser($user);
-            return [200, ['token' => $user['union_id']]];
+            return [200, ['token' => $this->token->set($user)]];
         }
         return [500, '注册失败'];
     }
@@ -54,8 +53,7 @@ class Common extends Web
         $password = $this->request->post('password');
         $user = $this->_userM->login($mobile, $password);
         if ($user) {
-            $this->saveUser($user);
-            return [200,  ['token' => $user['union_id']]];
+            return [200,  ['token' => $this->token->set($user)]];
         }
         return [501, '登录失败'];
     }

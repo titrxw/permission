@@ -6,7 +6,7 @@
     </Row>
     <Row style="margin-top:15px;">
       <Col span="5">
-        <Tree :data="departments" @on-select-change="selectItem"></Tree>
+        <Tree :data="modules" @on-select-change="selectItem"></Tree>
       </Col>
       <Col span="19">
         <Form
@@ -20,7 +20,7 @@
             <Input v-model="form.data.name" placeholder="请输入模块名称"></Input>
           </FormItem>
           <FormItem label="上级模块">
-            <Select v-model="form.data.parent_id">
+            <Select v-model="form.data.pid">
               <Option :value="0">请选择</Option>
               <Option
                 :value="item.id"
@@ -29,8 +29,11 @@
               >{{ item.title }}</Option>
             </Select>
           </FormItem>
+          <FormItem label="图标">
+            <Input v-model="form.data.icon" placeholder="请输入模块图标"></Input>
+          </FormItem>
           <FormItem label="描述">
-            <Input v-model="form.data.remark" placeholder="请输入模块描述"></Input>
+            <Input v-model="form.data.desc" placeholder="请输入模块描述"></Input>
           </FormItem>
           <FormItem label="启用">
             <i-switch v-model="form.data.status" size="large" :trueValue="1" :falseValue="0">
@@ -53,7 +56,6 @@
   </div>
 </template>
 <script>
-import api from "@/api";
 import { formatTree } from "@/libs/tree";
 export default {
   data() {
@@ -61,19 +63,19 @@ export default {
       buttonTxt: "添加",
       form: {
         data: {
-          parent_id: 0,
+          pid: 0,
           name: "",
           status: 1,
-          remark: ''
+          desc: ''
         },
         rules: {
           name: [
-            { required: true, message: "请输入区域名称", trigger: "blur" }
+            { required: true, message: "请输入模块名称", trigger: "change" }
           ]
         }
       },
       categorys: [],
-      departments: []
+      modules: []
     };
   },
   methods: {
@@ -90,10 +92,10 @@ export default {
           let result;
 
           if (this.form.data.id && this.form.data.id > 0) {
-            result = await api.updateDepartment(this.form.data);
+            result = await this.$api.saveModule(this.form.data);
           } else {
             delete this.form.data.id;
-            result = await api.departmentAdd(this.form.data);
+            result = await this.$api.saveModule(this.form.data);
           }
 
           if (result) {
@@ -111,11 +113,11 @@ export default {
     del() {
       this.$Modal.confirm({
         title: "提示",
-        content: "确定要删除该分类？",
+        content: "确定要删除该模块？",
         onOk: async () => {
-          let result = await api.deleteDepartment({ id: this.form.data.id });
+          let result = await this.$api.deleteModule({ id: this.form.data.id });
           if (result) {
-            this.$Notice.success({ title: "提示", desc: "分类删除成功" });
+            this.$Notice.success({ title: "提示", desc: "模块删除成功" });
             this.fetchList();
             this.reset();
           }
@@ -124,17 +126,18 @@ export default {
     },
     reset() {
       this.form.data = {
-        parent_id: 0,
+        pid: 0,
         name: "",
         status: 1,
-        remark: ''
+        desc: ''
       };
     },
     async fetchList() {
-      let result = await api.departmentList();
+      let result = await this.$api.moduleList();
       if (result) {
-        this.departments = result.children;
-        this.categorys = formatTree(this.data);
+        this.modules = result.children;
+        this.categorys = formatTree(this.modules);
+        console.log(this.categorys)
       }
     }
   },

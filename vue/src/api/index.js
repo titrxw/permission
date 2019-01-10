@@ -1,9 +1,11 @@
-import ajax from './axios'
 import auth from './auth'
-
+import system from './system'
+import module from './module'
 
 let api = {
-    ...auth
+    ...auth,
+    ...system,
+    ...module
 }
 
 export default {

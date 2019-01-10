@@ -7,29 +7,28 @@
  */
 namespace permiss\lib;
 
-use framework\web\Api;
 
-abstract class User extends Api
+abstract class User extends Web
 {
-    protected $user = [];
+    protected $user;
 
-    public function beforeAction()
+    public function before()
     {
         $this->header->add('Access-Control-Allow-Origin', '*');
-        $token = $this->request->post('token');
+        $token = $this->request->request('token');
         if (!$token) {
-            return ['ret' => 302, 'msg' => 'login false'];
+            return [302, 'login false'];
         }
         if (!($user = $this->token->get($token))) {
-            return ['ret' => 301, 'msg' => 'login false'];
+            return [301, 'login false'];
         }
 
         $result  = $this->validate();
         if ($result !== true)
         {
-            return ['ret' => 500, 'msg' => $result];
+            return [500, $result];
         }
-        $this->user = $user;
+        $this->user = \json_decode($user, true);
         return true;
     }
 }

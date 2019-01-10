@@ -53,13 +53,13 @@ return array(
         ),
         'meedo' => array(
             'database_type' => 'mysql',
-            'database_name' => 'blog',
+            'database_name' => 'permiss',
             'server' => '127.0.0.1',
             'username' => 'root',
             'password' => '123456',
             'charset' => 'utf8',
             'port' => 3306,
-            'prefix' => 'blog_',
+            'prefix' => 'permiss_',
             'logging' => true,
         ),
         'model' => array(

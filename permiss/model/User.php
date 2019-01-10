@@ -21,18 +21,16 @@ class User extends Model
         }
         $password = $this->password->setPassword($password)->MakeHashStr();
         $salt = $this->password->GetHashSalt();
-        $headimg = $this->_headers[mt_rand(0, count($this->_headers)-1)];
         $user = [
-            'union_id' => 'u_' . \uniqueId(),
+            'unid' => 'u_' . \uniqueId(),
             'name' => $name,
             'mobile' => $mobile,
             'password' => $password,
-            'headimgurl' => $headimg,
             'salt' => $salt,
-            'timestamp' => time()
+            'create_time' => time()
         ];
         $result = $this->db()->insert('user', $user);
-        if ($result && $result->rowCount()) {
+        if ($result->rowCount() > 0) {
             unset($user['password'], $user['salt']);
             return $user;
         }
@@ -41,7 +39,7 @@ class User extends Model
 
     public function login($mobile, $password)
     {
-        $userInfo = $this->db()->get('user', ['union_id', 'mobile', 'password','salt', 'name', 'headimgurl'], [
+        $userInfo = $this->db()->get('user', ['unid', 'mobile', 'password','salt', 'name'], [
             'mobile' => $mobile,
         ]);
         if (!$userInfo) {

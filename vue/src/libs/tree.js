@@ -1,14 +1,14 @@
 // 需要测试
-export const formatTree = (data, id=0, prefx = '') => {
+export const formatTree = (data, id = 0, prefx = '') => {
     let _tmp = [];
     if (!data) {
         return []
     }
-    for (let index in data){
-        if (data[index].parent_id == id) {
+    for (let index in data) {
+        if (data[index].pid == id) {
             _tmp.push({
                 id: parseInt(data[index].id),
-                title: prefx + data[index].title
+                title: prefx + data[index].name
             });
         }
         if (data[index].children) {

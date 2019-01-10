@@ -28,7 +28,8 @@ class Depart extends Model
 
         $result = $this->db()->update($this->_table, $data, ['id' => $id]);
       } else {
-        $data['uid'] = 'd-' . uniqueId();
+        $data['unid'] = 'd-' . uniqueId();
+          $data['create_time'] = time();
         $result = $this->db()->insert($this->_table, $data);
       }
 

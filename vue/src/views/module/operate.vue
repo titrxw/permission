@@ -10,7 +10,7 @@
 <script>
 import api from '@/api';
 import Table from '@/components/table';
-import Edit from './operate_sedit'
+import Edit from './operate_edit'
 export default {
 	components:{
 		Table,
