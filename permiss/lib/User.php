@@ -22,6 +22,9 @@ abstract class User extends Web
         if (!($user = $this->token->get($token))) {
             return [301, 'login false'];
         }
+        if ($user['valid_time'] < time()) {
+            return ['ret' => 301, 'msg' => 'login false'];
+        }
 
         $result  = $this->validate();
         if ($result !== true)
