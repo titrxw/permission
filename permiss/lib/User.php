@@ -16,11 +16,14 @@ abstract class User extends Api
     public function beforeAction()
     {
         $this->header->add('Access-Control-Allow-Origin', '*');
-        $token = $this->request->post('token');
+        $token = $this->request->request('token');
         if (!$token) {
             return ['ret' => 302, 'msg' => 'login false'];
         }
         if (!($user = $this->token->get($token))) {
+            return ['ret' => 301, 'msg' => 'login false'];
+        }
+        if ($user['valid_time'] < time()) {
             return ['ret' => 301, 'msg' => 'login false'];
         }
 
