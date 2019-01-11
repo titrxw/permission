@@ -1,21 +1,43 @@
 <template>
-  <Menu :theme="theme">
-    <div v-for="(item, aindex) in data" :key="aindex">
-      <Submenu v-if="item.menu" :name="index + '-' + aindex">
-        <template slot="title">
-          <Icon :type="item.icon"/>
+  <div>
+    <Menu :theme="theme" v-if="!shrink">
+      <div v-for="(item, aindex) in data" :key="aindex">
+        <Submenu v-if="item.menu" :name="index + '-' + aindex">
+          <template slot="title">
+            <Icon :type="item.icon"/>
+            {{ item.text }}
+          </template>
+          <tree-menu :shrink="shrink" :data="item.menu" :index="index + '-' + aindex+ '-c'"></tree-menu>
+        </Submenu>
+        <MenuItem v-else :name="index + '-' + aindex + '-'" @click.native="go(item.url)">
+          <Icon :type="item.icon"></Icon>
           {{ item.text }}
-        </template>
-        <tree-menu :data="item.menu" :index="index + '-' + aindex+ '-c'"></tree-menu>
-      </Submenu>
-      <MenuItem v-else :name="index + '-' + aindex + '-'">
+        </MenuItem>
+      </div>
+    </Menu>
+    <Dropdown
+      v-else
+      style="display: flex;
+    flex-direction: column;width:auto;"
+      placement="right-start"
+      v-for="(item, aindex) in data"
+      :key="aindex"
+    >
+      <DropdownItem :key="aindex" @click.native="item.menu? '' : go(item.url)">
         <Icon :type="item.icon"></Icon>
-        {{ item.text }}
-      </MenuItem>
-    </div>
-  </Menu>
+        <span style="padding-left:10px;">{{ item.text }}</span>
+      </DropdownItem>
+      <DropdownMenu
+        v-if="item.menu"
+        :key="aindex"
+        style="width: 140px;"
+        slot="list"
+      >
+        <tree-menu :shrink="shrink" :data="item.menu" :index="index + '-' + aindex+ '-c'"></tree-menu>
+      </DropdownMenu>
+    </Dropdown>
+  </div>
 </template>
-
 <script>
 export default {
   name: "treeMenu",
@@ -26,9 +48,18 @@ export default {
     index: {
       type: [String, Number]
     },
-    theme:{
+    theme: {
       type: String,
-      default: 'dark'
+      default: "dark"
+    },
+    shrink: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    go(path) {
+      this.$router.push(path);
     }
   }
 };

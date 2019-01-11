@@ -24,6 +24,7 @@ abstract class Web extends Api
 
     public function after($data = array())
     {
+        // 做log日志
         if (is_array($data))
         {
             $data['ret'] = $data[0] ?? 200;

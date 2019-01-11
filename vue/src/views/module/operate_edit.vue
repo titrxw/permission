@@ -10,11 +10,11 @@
       <FormItem label="别名" prop="alias">
         <Input v-model="form.alias" placeholder="请输入操作别名"></Input>
       </FormItem>
-      <FormItem prop="module_id" label="所属模块">
-            <Select v-model="form.module_id" style="margin-bottom:10px;">
+      <FormItem prop="mid" label="所属模块">
+            <Select v-model="form.mid" style="margin-bottom:10px;">
               <Option
                 v-for="(itemd,indexd) in modules"
-                :value="itemd.id"
+                :value="itemd.unid"
                 :key="indexd"
                 :disabled="itemd.disabled"
               >{{ itemd.title }}</Option>
@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import api from "@/api";
 import { formatTree } from "@/libs/tree";
 export default {
   props: {
@@ -51,7 +50,7 @@ export default {
       form: {
         name: "",
         url: "",
-        module_id: "",
+        mid: "",
         status: 1,
         alias: ''
       },
@@ -70,7 +69,7 @@ export default {
             trigger: "blur"
           }
         ],
-        module_id: [
+        mid: [
           {
             required: true,
             message: "请选择所属模块",
@@ -85,11 +84,10 @@ export default {
       this.$refs["form"].validate(async valid => {
           if (this.rowId) {
             this.form.id = this.rowId;
-            result = await api.managerUpdate(this.form);
           } else {
             delete this.form.id;
-            result = await api.managerAdd(this.form);
           }
+          let result = await this.$api.saveOperate(this.form);
 
           if (result) {
             this.$Notice.success({
@@ -104,24 +102,25 @@ export default {
     close() {
       this.show = false;
       this.form = {
-         name: "",
+        name: "",
         url: "",
-        module_id: "",
+        mid: "",
         status: 1,
         alias: ''
       };
       this.$emit("input", false);
     },
     async info() {
-      let result = await api.managerDetail({ id: this.rowId });
+      let id = this.rowId
+      let result = await this.$api.getOperate({ id });
       if (result) {
         this.form = result;
       }
     },
     async getModules() {
-      let result = await api.getJobs();
+      let result = await this.$this.$api.moduleList();
       if (result) {
-        this.modules = result.data;
+        this.modules = formatTree(result.children);
       }
     }
   },

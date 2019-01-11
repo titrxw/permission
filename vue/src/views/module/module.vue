@@ -23,11 +23,14 @@
             <Select v-model="form.data.pid">
               <Option :value="0">请选择</Option>
               <Option
-                :value="item.id"
+                :value="item.unid"
                 v-for="(item, index) in categorys"
                 :key="index"
               >{{ item.title }}</Option>
             </Select>
+          </FormItem>
+          <FormItem label="url">
+            <Input v-model="form.data.url" placeholder="请输入url"></Input>
           </FormItem>
           <FormItem label="图标">
             <Input v-model="form.data.icon" placeholder="请输入模块图标"></Input>
@@ -66,7 +69,9 @@ export default {
           pid: 0,
           name: "",
           status: 1,
-          desc: ''
+          desc: '',
+          icon: '',
+          url: ''
         },
         rules: {
           name: [

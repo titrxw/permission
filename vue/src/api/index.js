@@ -1,11 +1,13 @@
 import auth from './auth'
 import system from './system'
 import module from './module'
+import operate from './operate'
 
 let api = {
     ...auth,
     ...system,
-    ...module
+    ...module,
+    ...operate
 }
 
 export default {
