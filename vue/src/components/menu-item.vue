@@ -1,5 +1,5 @@
 <template>
-  <Menu>
+  <Menu :theme="theme">
     <div v-for="(item, aindex) in data" :key="aindex">
       <Submenu v-if="item.menu" :name="index + '-' + aindex">
         <template slot="title">
@@ -25,6 +25,10 @@ export default {
     },
     index: {
       type: [String, Number]
+    },
+    theme:{
+      type: String,
+      default: 'dark'
     }
   }
 };
