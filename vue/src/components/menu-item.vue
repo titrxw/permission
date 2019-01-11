@@ -17,8 +17,7 @@
     </Menu>
     <Dropdown
       v-else
-      style="display: flex;
-    flex-direction: column;width:auto;"
+      style="display: flex;flex-direction: column;width:auto;"
       placement="right-start"
       v-for="(item, aindex) in data"
       :key="aindex"
@@ -30,7 +29,6 @@
       <DropdownMenu
         v-if="item.menu"
         :key="aindex"
-        style="width: 140px;"
         slot="list"
       >
         <tree-menu :shrink="shrink" :data="item.menu" :index="index + '-' + aindex+ '-c'"></tree-menu>
@@ -46,7 +44,8 @@ export default {
       type: Array
     },
     index: {
-      type: [String, Number]
+      type: [String, Number],
+      default: 0
     },
     theme: {
       type: String,
@@ -54,7 +53,7 @@ export default {
     },
     shrink: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   methods: {
