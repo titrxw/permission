@@ -27,6 +27,7 @@ class Module extends Model
             if (!empty($data['is_delete'])) unset($data['is_delete']);
 
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
+            //task执行强制对应用户下线
         } else {
             $data['unid'] = 'm-' . uniqueId();
             $data['create_time'] = time();
@@ -54,7 +55,8 @@ class Module extends Model
     {
         $result = $this->db()->update($this->_table, ['is_delete' => 1], ['id' => $id]);
         if ($result->rowCount() > 0) {
-            return true;
+            $ids = $this->db()->select('operate','unid', ['mid' => $id]);
+            return $this->model('operate')->delete($ids);
         }
         return false;
     }

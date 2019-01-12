@@ -34,4 +34,10 @@ abstract class User extends Web
         $this->user = \json_decode($user, true);
         return true;
     }
+
+    private function authCheck()
+    {
+        $operate = \getModule() . DS . $this->getController() . DS . $this->getAction();
+        
+    }
 }

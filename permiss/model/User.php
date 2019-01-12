@@ -78,4 +78,16 @@ class User extends Model
         }
         return false;
     }
+
+    public function getPermiss($uid)
+    {
+        $roles = $this->db()->select('user_role',['role' => ['role_id' => 'unid']], 'role_id', ['uid' => $uid,'status' => 1]);
+        if (!$roles) {
+            return [];
+        }
+
+        $permiss = $this->db()->select('role_permiss',['permiss' => ['oid' => 'unid']], 'role_id', ['rid' => $roles, 'status' => 1]);
+
+        return $permiss;
+    }
 }

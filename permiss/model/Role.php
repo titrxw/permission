@@ -27,6 +27,7 @@ class Role extends Model
             if (!empty($data['is_delete'])) unset($data['is_delete']);
 
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
+            //task执行强制对应用户下线
         } else {
             $data['unid'] = 'j-' . uniqueId();
             $data['create_time'] = time();
@@ -54,6 +55,7 @@ class Role extends Model
     {
         $result = $this->db()->update($this->_table, ['is_delete' => 1], ['id' => $id]);
         if ($result->rowCount() > 0) {
+            //task执行强制对应用户下线
             return true;
         }
         return false;
