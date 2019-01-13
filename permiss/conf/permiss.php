@@ -7,19 +7,21 @@
  */
 
 return [
-    [
-        "text"=>"模块管理",
-        "icon"=>"hammer",
-        "menu"=>[
-            [
-                "text"=>"模块",
-                "icon"=>"",
-                "path"=>"/module"
-            ],
-            [
-                "text"=>"操作",
-                "icon"=>"",
-                "path"=>"/module/operate"
+    'menu' => [
+        [
+            "name"=>"模块管理",
+            "icon"=>"hammer",
+            "menu"=>[
+                [
+                    "name"=>"模块",
+                    "icon"=>"",
+                    "url"=>"/module"
+                ],
+                [
+                    "name"=>"操作",
+                    "icon"=>"",
+                    "url"=>"/module/operate"
+                ]
             ]
         ]
     ]
