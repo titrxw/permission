@@ -73,9 +73,9 @@ axios.interceptors.response.use(
         switch (response.data.ret) {
             case 200:
                 return response.data.data ? response.data.data : true;
-            case 300:
-                sessionStorage.removeItem('user');
-                sessionStorage.removeItem('token');
+            case 301:
+                Vue.storage.delete('user')
+                Vue.storage.delete('token')
                 router.push({ path: '/login' });
                 return false;
             case 403:

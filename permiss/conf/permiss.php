@@ -20,7 +20,7 @@ return [
                 [
                     "name"=>"职位",
                     "icon"=>"",
-                    "url"=>"/organization/hob"
+                    "url"=>"/organization/job"
                 ]
             ]
         ],
@@ -62,5 +62,8 @@ return [
                 ]
             ]
         ]
-    ]
+                ],
+                'operate' => [
+                    'permiss/System/menu'
+                ]
 ];

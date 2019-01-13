@@ -63,35 +63,35 @@ export default [{
                 meta: {
                     requireLogin: true
                 },
-                component: (resolve) => require(['../views/department/index.vue'], resolve)
+                component: (resolve) => require(['../views/organization/department/index.vue'], resolve)
             },
             {
                 path: 'job',
                 meta: {
                     requireLogin: true
                 },
-                component: (resolve) => { require(['../views/job/index.vue'], resolve) }
+                component: (resolve) => { require(['../views/organization/job/index.vue'], resolve) }
             },
             {
                 path: 'role',
                 meta: {
                     requireLogin: true
                 },
-                component: (resolve) => { require(['../views/role/index.vue'], resolve) }
+                component: (resolve) => { require(['../views/organization/role/index.vue'], resolve) }
             },
             {
                 path: 'user',
                 meta: {
                     requireLogin: true
                 },
-                component: (resolve) => { require(['../views/user/index.vue'], resolve) }
+                component: (resolve) => { require(['../views/organization/user/index.vue'], resolve) }
             },
             {
                 path: 'user/detail',
                 meta: {
                     requireLogin: true
                 },
-                component: (resolve) => { require(['../views/user/detail.vue'], resolve) }
+                component: (resolve) => { require(['../views/organization/user/detail.vue'], resolve) }
             }
         ]
     }

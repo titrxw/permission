@@ -23,7 +23,7 @@ abstract class User extends Web
         if (!($user = $this->redis->get($token))) {
             return [301, 'login false'];
         }
-        $this->user = \json_decode($user, true);
+        $this->user = $user;
         $this->_userM = $this->model('User');
 
         if (!$this->authCheck()) {
@@ -41,7 +41,7 @@ abstract class User extends Web
 
     private function authCheck()
     {
-        $operate = \getModule() . DS . $this->getController() . DS . $this->getAction();
+        $operate = \getModule() . DS . $this->getController() . DS . \rtrim($this->getAction(), 'Api');
         $userOperates = $this->getOperate();
         if (in_array($operate, $userOperates)) {
             return true;

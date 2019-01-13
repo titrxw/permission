@@ -14,7 +14,7 @@ return array(
     'addComponentsMap' => array(
         'validate' => 'framework\\components\\validate\\Validate',
         'password' => 'framework\\components\\security\\Password',
-        'redis' => 'framework\\components\\cache\\Redis',
+        'redis' => 'framework\\components\\cache\\File',
         'uniqueid' => 'framework\\components\\uniqueid\\UniqueId',
         'tree' => 'permiss\\lib\\Tree'
     ), 

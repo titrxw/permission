@@ -52,6 +52,9 @@ class User extends Model
         if (!$result) {
             return false;
         }
+
+        $userInfo['role'] = $this->db()->select('user_role','role_id', ['uid' => $userInfo['unid']]);
+
         unset($userInfo['password'], $userInfo['salt']);
         return $userInfo;
     }
@@ -81,6 +84,10 @@ class User extends Model
 
     public function getMenu($roleId)
     {
+        if (!$roleId) {
+            return [];
+        }
+
         $mids = $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid'], 'mid', ['rid' => $roleId, 'status' => 1, 'is_delete' => 0, 'GROUP' => 'mid']]);
         $menus = $this->db()->select('module', ['name', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $mids]);
         $paths = \array_unique(\implode(',', \array_column($menus, 'path')));
@@ -92,6 +99,10 @@ class User extends Model
 
     public function getOperate($roleId)
     {
+        if (!$roleId) {
+            return [];
+        }
+        
         return $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid'], 'url', ['tid' => $roleId, 'status' => 1, 'is_delete' => 0]]);
     }
 }

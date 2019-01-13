@@ -52,8 +52,10 @@ class Common extends Web
         $mobile = $this->request->post('mobile');
         $password = $this->request->post('password');
         $user = $this->_userM->login($mobile, $password);
+        $token = \token($user);
+        $this->redis->set($token,$user);
         if ($user) {
-            return [200,  ['token' => $this->token->set($user)]];
+            return [200,  ['token' => $token]];
         }
         return [501, '登录失败'];
     }

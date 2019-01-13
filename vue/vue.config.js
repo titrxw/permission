@@ -3,7 +3,7 @@ module.exports = {
         port: 9090,
         proxy: {
             '/permiss': { //使用"/api"来代替"http://f.apiplus.c" 
-                target: 'http://localhost/php-framework/index.php/', //源地址 
+                target: 'http://localhost:81/php-framework/index.php/', //源地址 
                 changeOrigin: true //改变源 
             }
         }

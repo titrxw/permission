@@ -41,9 +41,6 @@ export default {
       }
     };
   },
-  components: {
-    Auth
-  },
   methods: {
     close() {
       this.form = {
