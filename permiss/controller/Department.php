@@ -41,7 +41,7 @@ class Department extends User
     public function listApi()
     {
         $result = $this->_departM->getAll();
-        return [200, $result];
+        return [200, $this->tree->get($result)];
     }
 
     /**
