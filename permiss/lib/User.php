@@ -11,7 +11,7 @@ namespace permiss\lib;
 abstract class User extends Web
 {
     protected $user;
-    protected $_userM;
+    protected $_roleM;
 
     public function before()
     {
@@ -24,7 +24,7 @@ abstract class User extends Web
             return [301, 'login false'];
         }
         $this->user = $user;
-        $this->_userM = $this->model('User');
+        $this->_roleM = $this->model('Role');
 
         if (!$this->authCheck()) {
             return [400, 'auth failed'];
@@ -59,7 +59,8 @@ abstract class User extends Web
         if ($this->user['name'] === 'admin') {
             $userOperates = $this->conf->get('permiss.operate');
         } else {
-            $userOperates = $this->_userM->getOperate($this->user['role']);
+            $userOperates = $this->_roleM->getOperate($this->user['role']);
+            $userOperates = \array_column($userOperates, 'url');
         }
         $this->user['operates'] = $userOperates;
         $this->redis->set($this->request->request('token'), $this->user);
@@ -76,7 +77,7 @@ abstract class User extends Web
         if ($this->user['name'] === 'admin') {
             $roleMenus = $this->conf->get('permiss.menu');
         } else {
-            $roleMenus = $this->_userM->getMenu($this->user['role']);
+            $roleMenus = $this->_roleM->getMenu($this->user['role']);
         }
         $this->user['menu'] = $roleMenus;
         $this->redis->set($this->request->request('token'), $this->user);

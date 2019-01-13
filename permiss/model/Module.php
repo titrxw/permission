@@ -18,8 +18,14 @@ class Module extends Model
         if (!empty($data['id'])) {
             $id = $data['id'];
             unset($data['id']);
-            $data['path'] = $this->db()->get($this->_table, 'path', ['unid' => $data['pid']]) . ',' . $data['pid'];
-            $data['path'] = trim($data['path'], ',');
+            if ($data['pid'] === 0) {
+                $data['path'] = 0;
+                $data['level'] = 1;
+            } else {
+                $pdata = $this->db()->get($this->_table, ['path', 'level'], ['unid' => $data['pid']]);
+                $data['path'] = trim($pdata['path']. ',' . $data['pid'], ',');
+                $data['level'] = $pdata['level'] + 1;
+            }
             
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
             //task执行强制对应用户下线
@@ -31,8 +37,17 @@ class Module extends Model
 
             $data['unid'] = 'm-' . uniqueId();
             $data['create_time'] = time();
-            $data['path'] = $this->db()->get($this->_table, 'path', ['unid' => $data['pid']]) . ',' . $data['pid'];
-            $data['path'] = trim($data['path'], ',');
+            if ($data['pid'] === 0) {
+                $data['path'] = 0;
+                $data['level'] = 1;
+            } else {
+                $pdata = $this->db()->get($this->_table, ['path', 'level'], ['unid' => $data['pid']]);
+                $data['path'] = trim($pdata['path']. ',' . $data['pid'], ',');
+                $data['level'] = $pdata['level'] + 1;
+                var_dump($pdata);
+            }
+            
+
             $result = $this->db()->insert($this->_table, $data);
         }
         if ($result->rowCount() > 0) {
@@ -42,9 +57,13 @@ class Module extends Model
         return false;
     }
 
-    public function getAll()
+    public function getAll($status = null)
     {
-        return $this->db()->select($this->_table, ['id', 'title', 'icon', 'desc', 'status','unid','url','pid'], ['is_delete' => 0]);
+        $where = ['is_delete' => 0];
+        if (isset($status)) {
+            $where['status'] = $status;
+        }
+        return $this->db()->select($this->_table, ['id', 'title', 'icon', 'desc', 'status','unid','url','pid', 'level'], $where);
     }
 
     public function get($id)
@@ -54,10 +73,14 @@ class Module extends Model
 
     public function delete($id)
     {
-        $result = $this->db()->update($this->_table, ['is_delete' => 1], ['id' => $id]);
+        $has = $this->db()->get($this->_table, 'id', ['pid' => $id]);
+        if ($has) {
+            return false;
+        }
+        $result = $this->db()->update($this->_table, ['is_delete' => 1], ['unid' => $id]);
         if ($result->rowCount() > 0) {
             $ids = $this->db()->select('operate','unid', ['mid' => $id]);
-            return $this->model('operate')->delete($ids);
+            return $this->model('Operate')->delete($ids);
         }
         return false;
     }

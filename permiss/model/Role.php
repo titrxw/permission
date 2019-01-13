@@ -39,9 +39,13 @@ class Role extends Model
         return false;
     }
 
-    public function getAll()
+    public function getAll($status)
     {
-        return $this->db()->select($this->_table, '*', ['is_delete' => 0]);
+        $where = ['is_delete' => 0];
+        if (isset($status)) {
+            $where['status'] = $status;
+        }
+        return $this->db()->select($this->_table, '*', $where);
     }
 
     public function get($id)
@@ -57,6 +61,30 @@ class Role extends Model
             return true;
         }
         return false;
+    }
+
+    public function getMenu($roleId)
+    {
+        if (!$roleId) {
+            return [];
+        }
+
+        $mids = $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid'], 'mid', ['rid' => $roleId, 'status' => 1, 'is_delete' => 0, 'GROUP' => 'mid']]);
+        $menus = $this->db()->select('module', ['name', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $mids]);
+        $paths = \array_unique(\implode(',', \array_column($menus, 'path')));
+        $pmenus = $this->db()->select('module', ['name', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $paths]);
+        $amenus = \array_merge($menus, $pmenus);
+
+        return $this->tree->get($amenus, 'menu');
+    }
+
+    public function getOperate($roleId)
+    {
+        if (!$roleId) {
+            return [];
+        }
+        
+        return $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid'], ['url', 'mid', 'unid', 'name'], ['rid' => $roleId, 'status' => 1, 'is_delete' => 0]]);
     }
 }
 

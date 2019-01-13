@@ -12,6 +12,7 @@ use framework\base\Model;
 class Operate extends Model
 {
     protected $_table = 'operate';
+    protected $_pageSize = 10;
 
     public function save($data)
     {
@@ -40,7 +41,7 @@ class Operate extends Model
         return false;
     }
 
-    public function getAll($page = 1)
+    public function getPage($page = 1)
     {
         $total = $this->db()->count($this->_table, ['is_delete' => 0]);
       if (!$total) {
@@ -50,6 +51,11 @@ class Operate extends Model
       return ['total'=>$total, 'data'=>$data];
     }
 
+    public function getAllNormals()
+    {
+      $data = $this->db()->select($this->_table, ['id', 'name', 'unid', 'url', 'alias', 'status', 'mid'], ['is_delete' => 0, 'status' => 1]);
+    }
+
     public function get($id)
     {
         return $this->db()->get($this->_table, '*', ['id' => $id, 'is_delete' => 0]);
@@ -57,7 +63,10 @@ class Operate extends Model
 
     public function delete($id)
     {
-        $result = $this->db()->update($this->_table, ['is_delete' => 1], ['id' => $id]);
+        if (!$id) {
+            return true;
+        }
+        $result = $this->db()->update($this->_table, ['is_delete' => 1], ['unid' => $id]);
         if ($result->rowCount() > 0) {
             //task执行强制对应用户下线
             return true;

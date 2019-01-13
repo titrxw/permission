@@ -38,9 +38,13 @@ class Depart extends Model
       return false;
     }
 
-    public function getAll()
+    public function getAll($status)
     {
-      return $this->db()->select($this->_table, ['alias', 'id', 'title', 'pid', 'status', 'unid'], ['is_delete' => 0]);
+      $where = ['is_delete' => 0];
+      if (isset($status)) {
+        $where['status'] = $status;
+      }
+      return $this->db()->select($this->_table, ['alias', 'id', 'title', 'pid', 'status', 'unid'], $where);
     }
 
     public function get($id) 

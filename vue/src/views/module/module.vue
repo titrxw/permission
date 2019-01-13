@@ -21,7 +21,7 @@
           </FormItem>
           <FormItem label="上级模块">
             <Select v-model="form.data.pid">
-              <Option :value="0">请选择</Option>
+              <Option value="0">请选择</Option>
               <Option
               :disabled="form.data.unid == item.unid"
                 :value="item.unid"
@@ -67,7 +67,7 @@ export default {
       buttonTxt: "添加",
       form: {
         data: {
-          pid: 0,
+          pid: '0',
           title: "",
           status: 1,
           desc: "",
@@ -101,7 +101,7 @@ export default {
       this.$refs["category"].validate(async valid => {
         if (valid) {
           let result;
-
+          
           if (this.form.data.id && this.form.data.id > 0) {
             result = await this.$api.saveModule(this.form.data);
           } else {
@@ -126,7 +126,7 @@ export default {
         title: "提示",
         content: "确定要删除该模块？",
         onOk: async () => {
-          let result = await this.$api.deleteModule({ id: this.form.data.id });
+          let result = await this.$api.deleteModule( this.form.data.unid);
           if (result) {
             this.$Notice.success({ title: "提示", desc: "模块删除成功" });
             this.fetchList();
@@ -137,7 +137,7 @@ export default {
     },
     reset() {
       this.form.data = {
-        pid: 0,
+        pid: '0',
         title: "",
         status: 1,
         desc: "",
@@ -150,7 +150,6 @@ export default {
       if (result) {
         this.modules = result.children;
         this.categorys = formatTree(this.modules);
-        console.log(this.categorys);
       }
     }
   },

@@ -114,7 +114,14 @@ export default {
     async getModules() {
       let result = await this.$api.moduleList();
       if (result) {
-        this.modules = formatTree(result.children);
+        let tmp = formatTree(result.children);
+        result = [];
+        tmp.forEach((item, index) => {
+          if (item.level == 2) {
+            result.push(item)
+          }
+        })
+        this.modules = result
       }
     }
   },

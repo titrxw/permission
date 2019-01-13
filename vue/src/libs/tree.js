@@ -7,6 +7,7 @@ export const formatTree = (data, unid = 0, prefx = '') => {
     for (let index in data) {
         if (data[index].pid == unid) {
             _tmp.push({
+                ...data[index],
                 unid: data[index].unid,
                 title: prefx + data[index].title
             });

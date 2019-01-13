@@ -6,7 +6,7 @@ export default {
     saveModule(form) {
         return ajax.post('module/save', { form })
     },
-    deleteModule(id) {
-        return ajax.get('module/delete', { id })
+    deleteModule(unid) {
+        return ajax.get('module/delete', { unid })
     }
 }

@@ -12,7 +12,6 @@ use framework\base\Model;
 class Job extends Model
 {
     protected $_table = 'job';
-    protected $_pageSize = 10;
 
     public function save($data)
     {
@@ -39,14 +38,14 @@ class Job extends Model
       return false;
     }
 
-    public function getAll($page = 1)
+    public function getAll($status)
     {
-      $total = $this->db()->count($this->_table, ['is_delete' => 0]);
-      if (!$total) {
-        return ['total'=>0, 'data'=>[]];
+      $where = ['is_delete' => 0];
+      if (isset($status)) {
+        $where['status'] = $status;
       }
-      $data = $this->db()->select($this->_table, ['id', 'name', 'status'], ['is_delete' => 0,'LIMIT' => [($page - 1) * $this->_pageSize, $this->_pageSize]]);
-      return ['total'=>$total, 'data'=>$data];
+      $data = $this->db()->select($this->_table, ['id','unid', 'name', 'status'], $where);
+      return ['data'=>$data];
     }
 
     public function get($id) 

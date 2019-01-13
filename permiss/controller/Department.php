@@ -38,9 +38,9 @@ class Department extends User
      * @method get
      * 
      */
-    public function listApi()
+    public function listApi($status = null)
     {
-        $result = $this->_departM->getAll();
+        $result = $this->_departM->getAll($status);
         return [200, $this->tree->get($result)];
     }
 

@@ -61,11 +61,11 @@ class Module extends User
     /**
      * @method get
      * 
-     * @rule id|get|模块id错误 integer
+     * @rule unid|get|模块id错误 require
      */
-    public function deleteApi($id)
+    public function deleteApi($unid)
     {
-        $result = $this->_moduleM->delete($id);
+        $result = $this->_moduleM->delete($unid);
         if ($result) {
             return [200, true];
         }

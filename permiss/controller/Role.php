@@ -37,9 +37,9 @@ class Role extends User
      * @method get
      *
      */
-    public function listApi()
+    public function listApi($status = null)
     {
-        $result = $this->_roleM->getAll();
+        $result = $this->_roleM->getAll($status);
         return [200, $result];
     }
 
@@ -69,5 +69,32 @@ class Role extends User
             return [200, true];
         }
         return [400, '删除失败'];
+    }
+
+    /**
+     * @method get
+     */
+    public function getPermissApi($uid = '')
+    {
+        $modules = $this->model('Module')->getAll(1);
+        $modules = \array_combine(\array_column($modules, 'unid'), $modules);
+        $operates = $this->model('Operate')->getAllNormals();
+        $operates = \array_combine(\array_column($operates, 'unid'), $operates);
+
+        $userPermiss = [];
+        if ($uid) {
+            $userPermiss = $this->model('Role')->getOperate($this->model('User')->getRole($uid));
+            \array_walk($userPermiss, function (&$v) {
+                $v['selected'] = true;
+            });
+        }
+
+        $operates = \array_merge($operates, $userPermiss);
+
+        foreach($operates as $item) {
+            $modules[$item['mid']]['operates'][] = $item;
+        }
+
+        return [200, $this->tree->get($modules)];
     }
 }

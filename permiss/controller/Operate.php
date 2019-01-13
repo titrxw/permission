@@ -42,7 +42,7 @@ class Operate extends User
      */
     public function listApi($page = 1)
     {
-        $result = $this->_operateM->getAll($page);
+        $result = $this->_operateM->getPage($page);
         return [200, $result];
     }
 
