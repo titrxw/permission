@@ -15,20 +15,18 @@ class Operate extends Model
 
     public function save($data)
     {
-        $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name'], 'mid' => $data['mid']]);
-        if ($exists) {
-            return false;
-        }
-
         if (!empty($data['id'])) {
             $id = $data['id'];
             unset($data['id']);
-            if (!empty($data['create_time'])) unset($data['create_time']);
-            if (!empty($data['is_delete'])) unset($data['is_delete']);
 
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
             //task执行强制对应用户下线
         } else {
+            $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name'], 'mid' => $data['mid']]);
+            if ($exists) {
+                return false;
+            }
+
             $data['unid'] = 'o-' . uniqueId();
             $data['create_time'] = time();
             $result = $this->db()->insert($this->_table, $data);
@@ -42,9 +40,14 @@ class Operate extends Model
         return false;
     }
 
-    public function getAll()
+    public function getAll($page = 1)
     {
-        return $this->db()->select($this->_table, '*', ['is_delete' => 0]);
+        $total = $this->db()->count($this->_table, ['is_delete' => 0]);
+      if (!$total) {
+        return ['total'=>0, 'data'=>[]];
+      }
+      $data = $this->db()->select($this->_table, ['id', 'name', 'url', 'alias', 'status', 'mid'], ['is_delete' => 0,'LIMIT' => [($page - 1) * $this->_pageSize, $this->_pageSize]]);
+      return ['total'=>$total, 'data'=>$data];
     }
 
     public function get($id)
@@ -54,9 +57,6 @@ class Operate extends Model
 
     public function delete($id)
     {
-        if (!id) {
-            return true;
-        }
         $result = $this->db()->update($this->_table, ['is_delete' => 1], ['id' => $id]);
         if ($result->rowCount() > 0) {
             //task执行强制对应用户下线

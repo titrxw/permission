@@ -20,8 +20,8 @@ class Module extends User
     /**
      * @method post
      * 
-     * @rule form.name|post|模块名称错误 require
-     * @rule form.pid|post|上级模块错误 integer
+     * @rule form.title|post|模块名称错误 require
+     * @rule form.pid|post|上级模块错误 require
      * @rule form.status|post|启用状态错误 integer
      */
     public function saveApi()

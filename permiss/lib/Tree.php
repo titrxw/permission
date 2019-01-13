@@ -20,6 +20,9 @@ class Tree extends Component
 
     public function get($data,$childKey = 'children')
     {
+        if (!$data) {
+            return [];
+        }
         $data = array_combine(array_column($data,$this->_id), $data);
 
         foreach ($data as $item) {

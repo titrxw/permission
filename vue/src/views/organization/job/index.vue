@@ -1,87 +1,143 @@
 <template>
-<div>
-	<Table ref="table" title="职位管理" :columns="column" :getData="fetchList">
-		<Button slot="table-operate" type="success" @click.native="edit.id = 0;edit.show = true;">添加</Button>
-	</Table>
-	<Edit v-model="edit.show" :rowId="edit.id"></Edit>
-</div>
+  <div>
+    <Table ref="table" title="职位管理" :columns="column" :getData="fetchList">
+      <Button slot="table-operate" type="success" @click.native="edit.id = 0;edit.show = true;">添加</Button>
+    </Table>
+    <Edit v-model="edit.show" :rowId="edit.id" @update-list="$refs['table'].fresh()"></Edit>
+  </div>
 </template>
 
 <script>
-import api from '@/api';
-import Table from '@/components/table';
-import Edit from './edit'
+import Table from "@/components/table";
+import Edit from "./edit";
 export default {
-	components:{
-		Table,
-		Edit
-	},
-	data() {
-		return {
-			edit: {
-				id: 0,
-				show: false
-			},
-			column:[
-				{
-					title:'序号',
-					key:'id',
-					align:'center'
-				},
-				{
-					title:'名称',
-					key:'name',
-					align:'center'
-				},
+  components: {
+    Table,
+    Edit
+  },
+  data() {
+    return {
+      edit: {
+        id: 0,
+        show: false
+      },
+      column: [
+        {
+          title: "序号",
+          key: "id",
+          align: "center"
+        },
+        {
+          title: "名称",
+          key: "name",
+          align: "center"
+        },
         {
           title: "启用",
           align: "center",
           render: (h, params) => {
             return h("div", [
-              h(
-                "i-switch",
-                {
-                  props: {
-                    trueValue: 1,
-                    falseValue: 0
-                  },
-                  on: {
-                    click: () => {}
-                  }
+              h("i-switch", {
+                props: {
+                  trueValue: 1,
+                  falseValue: 0,
+                  value: params.row.status
                 },
-                params.row.status_text
-              )
+                on: {
+                  'on-change': () => {
+                    let desc = params.row.status == 1 ? "禁用" : "启用";
+                    this.$Modal.confirm({
+                      title: "提示",
+                      content: "确定要" + desc + "该职位?",
+                      onOk: async () => {
+                        params.row.status = params.row.status == 1 ? 0 : 1;
+                        let result = await this.$api.saveJob({
+													name: params.row.name,
+                          id: params.row.id,
+                          status: params.row.status
+                        });
+                        if (result) {
+                          this.$Notice.success({
+                            title: "提示",
+                            desc: "操作成功"
+                          });
+                          this.$refs["table"].fresh();
+                        }
+											},
+											onCancel: () => {
+												this.$refs["table"].fresh();
+											}
+                    });
+                  }
+                }
+              })
             ]);
           }
         },
-				{
-					title:'操作',
-					key:'',
-					align:'center',
-					render: (h,params) => {
-						return h('Button',{
-							props:{
-								type:'success'
-							},
-							on: {
-								click:() =>{
-									this.edit.id = params.row.id
-									this.edit.show = true
-								}
-							}
-						},'编辑')
-					}	
-				},
-			]
-		}
-	},
-	methods : {
-		async fetchList(params) {
-			return [api.roleList, params]
-		},
-	},
-	mounted: function() {
-		this.$refs['table'].reload();
-	}
-}
+        {
+          title: "操作",
+          key: "",
+          align: "center",
+          render: (h, params) => {
+						return h("div", [
+							h(
+								"Button",
+								{
+									props: {
+										type: "success"
+									},
+									on: {
+										click: () => {
+											this.edit.id = params.row.id;
+											this.edit.show = true;
+										}
+									}
+								},
+								"编辑"
+							)
+							// h(
+              //   "Button",
+              //   {
+              //     props: {
+              //       type: "error"
+              //     },
+              //     style: {
+              //       marginLeft: '5px'
+              //     },
+              //     on: {
+              //       click: () => {
+              //         this.$Modal.confirm({
+              //           title: "提示",
+              //           content: "确定要删除该职位？",
+              //           onOk: async () => {
+              //             let result = await this.$api.deleteJob(params.row.id);
+              //             if (result) {
+              //               this.$Notice.success({
+              //                 title: "提示",
+              //                 desc: "操作删除成功"
+              //               });
+              //               this.$refs["table"].reload();
+              //             }
+              //           }
+              //         });
+              //       }
+              //     }
+              //   },
+              //   "删除"
+              // )
+						])
+          }
+        }
+      ]
+    };
+  },
+  methods: {
+    fetchList(params) {
+      return [this.$api.jobList, params];
+    }
+  },
+  mounted: function() {
+    this.$refs["table"].reload();
+  }
+};
 </script>

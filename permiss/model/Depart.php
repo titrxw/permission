@@ -11,25 +11,23 @@ use framework\base\Model;
 
 class Depart extends Model
 {
-  protected $_table = 'depart';
+  protected $_table = 'department';
 
     public function save($data)
     {
-      $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name'], 'pid' => $data['pid']]);
-      if ($exists) {
-        return false;
-      }
-
       if (!empty($data['id'])) {
         $id = $data['id'];
         unset($data['id']);
-        if (!empty($data['create_time'])) unset($data['create_time']);
-        if (!empty($data['is_delete'])) unset($data['is_delete']);
 
         $result = $this->db()->update($this->_table, $data, ['id' => $id]);
       } else {
+        $exists = $this->db()->get($this->_table, 'id', ['title' => $data['title'], 'pid' => $data['pid']]);
+        if ($exists) {
+          return false;
+        }
+
         $data['unid'] = 'd-' . uniqueId();
-          $data['create_time'] = time();
+        $data['create_time'] = time();
         $result = $this->db()->insert($this->_table, $data);
       }
 
@@ -42,7 +40,7 @@ class Depart extends Model
 
     public function getAll()
     {
-      return $this->db()->select($this->_table, '*', ['is_delete' => 0]);
+      return $this->db()->select($this->_table, ['alias', 'id', 'title', 'pid', 'status', 'unid'], ['is_delete' => 0]);
     }
 
     public function get($id) 

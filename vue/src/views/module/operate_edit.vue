@@ -10,20 +10,16 @@
       <FormItem label="别名" prop="alias">
         <Input v-model="form.alias" placeholder="请输入操作别名"></Input>
       </FormItem>
-      <FormItem label="图标">
-        <Input v-model="form.icon" placeholder="请输入模块图标"></Input>
-      </FormItem>
       <FormItem prop="mid" label="所属模块">
-            <Select v-model="form.mid" style="margin-bottom:10px;">
-              <Option
-                v-for="(itemd,indexd) in modules"
-                :value="itemd.unid"
-                :key="indexd"
-                :disabled="itemd.disabled"
-              >{{ itemd.title }}</Option>
-            </Select>
+        <Select v-model="form.mid" style="margin-bottom:10px;">
+          <Option
+            v-for="(itemd,indexd) in modules"
+            :value="itemd.unid"
+            :key="indexd"
+          >{{ itemd.title }}</Option>
+        </Select>
       </FormItem>
-      
+
       <FormItem label="启用">
         <i-switch v-model="form.status" size="large" :trueValue="1" :falseValue="0">
           <span slot="open">启用</span>
@@ -55,14 +51,20 @@ export default {
         url: "",
         mid: "",
         status: 1,
-        alias: '',
-        icon: ''
+        alias: ""
       },
       ruleValidate: {
         name: [
           {
             required: true,
             message: "请输入操作名称",
+            trigger: "blur"
+          }
+        ],
+        url: [
+          {
+            required: true,
+            message: "请输入链接",
             trigger: "blur"
           }
         ],
@@ -79,44 +81,38 @@ export default {
   methods: {
     handleSubmit() {
       this.$refs["form"].validate(async valid => {
-          if (this.rowId) {
-            this.form.id = this.rowId;
-          } else {
-            delete this.form.id;
-          }
-          let result = await this.$api.saveOperate(this.form);
+        if (!valid) {
+          return false;
+        }
+        if (this.rowId) {
+          this.form.id = this.rowId;
+        } else {
+          delete this.form.id;
+        }
+        let result = await this.$api.saveOperate(this.form);
 
-          if (result) {
-            this.$Notice.success({
-              title: "提示",
-              desc: "操作成功"
-            });
-            this.close();
-            this.$emit("update-list", false);
-          }
+        if (result) {
+          this.$Notice.success({
+            title: "提示",
+            desc: "操作成功"
+          });
+          this.close();
+          this.$emit("update-list", false);
+        }
       });
     },
     close() {
       this.show = false;
-      this.form = {
-        name: "",
-        url: "",
-        mid: "",
-        status: 1,
-        alias: '',
-        icon: ''
-      };
       this.$emit("input", false);
     },
     async info() {
-      let id = this.rowId
-      let result = await this.$api.getOperate({ id });
+      let result = await this.$api.getOperate(this.rowId);
       if (result) {
         this.form = result;
       }
     },
     async getModules() {
-      let result = await this.$this.$api.moduleList();
+      let result = await this.$api.moduleList();
       if (result) {
         this.modules = formatTree(result.children);
       }
@@ -127,10 +123,21 @@ export default {
       if (val) {
         this.show = val;
         this.getModules();
-        if (this.rowId > 0) {
-          this.title = "操作编辑";
-          this.info();
-        }
+      }
+    },
+    rowId(val) {
+      if (val) {
+        this.title = "操作编辑";
+        this.info();
+      } else {
+        this.form = {
+          name: "",
+          url: "",
+          mid: "",
+          status: 1,
+          alias: ""
+        };
+        this.title = "操作添加";
       }
     }
   }

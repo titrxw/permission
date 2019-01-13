@@ -16,13 +16,14 @@
           :label-width="140"
           style="width:500px;"
         >
-          <FormItem label="模块名称" prop="name">
-            <Input v-model="form.data.name" placeholder="请输入模块名称"></Input>
+          <FormItem label="模块名称" prop="title">
+            <Input v-model="form.data.title" placeholder="请输入模块名称"></Input>
           </FormItem>
           <FormItem label="上级模块">
             <Select v-model="form.data.pid">
               <Option :value="0">请选择</Option>
               <Option
+              :disabled="form.data.unid == item.unid"
                 :value="item.unid"
                 v-for="(item, index) in categorys"
                 :key="index"
@@ -67,14 +68,14 @@ export default {
       form: {
         data: {
           pid: 0,
-          name: "",
+          title: "",
           status: 1,
-          desc: '',
-          icon: '',
-          url: ''
+          desc: "",
+          icon: "",
+          url: ""
         },
         rules: {
-          name: [
+          title: [
             { required: true, message: "请输入模块名称", trigger: "change" }
           ]
         }
@@ -87,7 +88,12 @@ export default {
     async selectItem(item) {
       if (item && item[0]) {
         //   获取对应的信息
-        this.form.data;
+        let tmp = JSON.parse(JSON.stringify(item[0]));
+        delete tmp.children;
+        delete tmp.expand
+        delete tmp.nodeKey;
+        delete tmp.selected;
+        this.form.data = tmp;
         this.buttonTxt = "修改";
       }
     },
@@ -132,9 +138,11 @@ export default {
     reset() {
       this.form.data = {
         pid: 0,
-        name: "",
+        title: "",
         status: 1,
-        desc: ''
+        desc: "",
+        icon: "",
+        url: ""
       };
     },
     async fetchList() {
@@ -142,7 +150,7 @@ export default {
       if (result) {
         this.modules = result.children;
         this.categorys = formatTree(this.modules);
-        console.log(this.categorys)
+        console.log(this.categorys);
       }
     }
   },

@@ -23,11 +23,11 @@ axios.post = async(url, data, header = {}) => {
     return result
 }
 
-axios.get = async(url, data, header = {}) => {
+axios.get = async(url, params, header = {}) => {
     if (Vue.beforeRequest) {
         Vue.beforeRequest()
     }
-    let result = await axios.tget(url, data, header)
+    let result = await axios.tget(url, {params}, header)
     if (Vue.afterRequest) {
         Vue.afterRequest(result)
     }
@@ -47,6 +47,7 @@ axios.interceptors.request.use(
                 config.data['token'] = token;
             }
         } else if (config.method === 'get') {
+            console.log(config)
             if (token) {
                 if (!config.params) {
                     config.params = {}

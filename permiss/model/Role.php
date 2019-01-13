@@ -15,20 +15,18 @@ class Role extends Model
 
     public function save($data)
     {
-        $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name']]);
-        if ($exists) {
-            return false;
-        }
-
         if (!empty($data['id'])) {
             $id = $data['id'];
             unset($data['id']);
-            if (!empty($data['create_time'])) unset($data['create_time']);
-            if (!empty($data['is_delete'])) unset($data['is_delete']);
 
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
             //task执行强制对应用户下线
         } else {
+            $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name']]);
+            if ($exists) {
+                return false;
+            }
+
             $data['unid'] = 'j-' . uniqueId();
             $data['create_time'] = time();
             $result = $this->db()->insert($this->_table, $data);

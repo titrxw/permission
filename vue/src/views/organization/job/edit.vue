@@ -17,7 +17,6 @@
   </Modal>
 </template>
 <script>
-import api from "@/api";
 export default {
   props: {
     rowId: 0,
@@ -28,7 +27,7 @@ export default {
       show: false,
       form: {
         name: "",
-        status: 0
+        status: 1
       },
       ruleValidate: {
         name: [
@@ -43,22 +42,17 @@ export default {
   },
   methods: {
     close() {
-      this.form = {
-        name: "",
-        status: 0
-      };
       this.$emit("input", false);
     },
     async submit() {
       this.$refs["job"].validate(async valid => {
         if (valid) {
           if (this.rowId) {
-            // update
-            this.form.id = this.rowId
+            this.form.id = this.rowId;
           } else {
-            // add
+            delete this.form.id;
           }
-          let res = true;
+          let res = await this.$api.saveJob(this.form);
           if (res) {
             this.$Notice.success({ title: "提示", desc: "操作成功" });
             this.$emit("update-list");
@@ -68,7 +62,7 @@ export default {
       });
     },
     async detail() {
-      let result = await api.roleInfo(this.rowId);
+      let result = await this.$api.getJob(this.rowId);
       if (result) {
         this.form = result;
       }
@@ -77,8 +71,15 @@ export default {
   watch: {
     value: function(val) {
       this.show = val;
+    },
+    rowId(val) {
       if (val) {
         this.detail();
+      } else {
+        this.form = {
+          name: "",
+          status: 1
+        };
       }
     }
   }

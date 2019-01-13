@@ -15,30 +15,26 @@ class Module extends Model
 
     public function save($data)
     {
-        $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name'], 'pid' => $data['pid']]);
-        if ($exists) {
-            return false;
-        }
-
         if (!empty($data['id'])) {
             $id = $data['id'];
             unset($data['id']);
-            if (!empty($data['create_time'])) unset($data['create_time']);
-            if (!empty($data['is_delete'])) unset($data['is_delete']);
             $data['path'] = $this->db()->get($this->_table, 'path', ['unid' => $data['pid']]) . ',' . $data['pid'];
-            trim($data['path'], ',');
+            $data['path'] = trim($data['path'], ',');
             
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
             //task执行强制对应用户下线
         } else {
+            $exists = $this->db()->get($this->_table, 'id', ['title' => $data['title'], 'pid' => $data['pid']]);
+            if ($exists) {
+                return false;
+            }
+
             $data['unid'] = 'm-' . uniqueId();
             $data['create_time'] = time();
             $data['path'] = $this->db()->get($this->_table, 'path', ['unid' => $data['pid']]) . ',' . $data['pid'];
-            trim($data['path'], ',');
-
+            $data['path'] = trim($data['path'], ',');
             $result = $this->db()->insert($this->_table, $data);
         }
-
         if ($result->rowCount() > 0) {
             return true;
         }
@@ -48,12 +44,12 @@ class Module extends Model
 
     public function getAll()
     {
-        return $this->db()->select($this->_table, '*', ['is_delete' => 0]);
+        return $this->db()->select($this->_table, ['id', 'title', 'icon', 'desc', 'status','unid','url','pid'], ['is_delete' => 0]);
     }
 
     public function get($id)
     {
-        return $this->db()->get($this->_table, '*', ['id' => $id, 'is_delete' => 0]);
+        return $this->db()->get($this->_table, ['id', 'title', 'icon', 'desc', 'status','unid','url'], ['id' => $id, 'is_delete' => 0]);
     }
 
     public function delete($id)

@@ -23,7 +23,7 @@ class Operate extends User
      *
      * @rule form.name|post|功能名称错误 require
      * @rule form.url|post|链接错误 require
-     * @rule form.mid|post|所属模块错误 integer
+     * @rule form.mid|post|所属模块错误 require
      * @rule form.status|post|启用状态错误 integer
      */
     public function saveApi()

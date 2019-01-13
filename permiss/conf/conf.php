@@ -53,6 +53,10 @@ return array(
             'port' => 3306,
             'prefix' => 'permiss_',
             'logging' => true,
+            'option' => [
+                PDO::ATTR_STRINGIFY_FETCHES => false,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ]
         ),
         'model' => array(
             'db' => 'meedo'

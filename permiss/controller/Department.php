@@ -20,8 +20,8 @@ class Department extends User
     /**
      * @method post
      * 
-     * @rule form.name|post|部门名称错误 require
-     * @rule form.pid|post|上级部门错误 integer
+     * @rule form.title|post|部门名称错误 require
+     * @rule form.pid|post|上级部门错误 require
      * @rule form.status|post|启用状态错误 integer
      */
     public function saveApi()

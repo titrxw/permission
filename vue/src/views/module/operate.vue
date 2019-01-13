@@ -3,7 +3,7 @@
     <Table ref="table" title="操作管理" :columns="column" :getData="fetchList">
       <Button slot="table-operate" type="success" @click.native="edit.id = 0;edit.show = true;">添加</Button>
     </Table>
-    <Edit v-model="edit.show" :rowId="edit.id"></Edit>
+    <Edit v-model="edit.show" :rowId="edit.id" @update-list="$refs['table'].fresh()"></Edit>
   </div>
 </template>
 
@@ -34,7 +34,7 @@ export default {
         },
         {
           title: "别名",
-          key: "name",
+          key: "alias",
           align: "center"
         },
         {
@@ -44,7 +44,7 @@ export default {
         },
         {
           title: "链接",
-          key: "name",
+          key: "url",
           align: "center"
         },
         {
@@ -57,10 +57,37 @@ export default {
                 {
                   props: {
                     trueValue: 1,
-                    falseValue: 0
+                    falseValue: 0,
+                    value: params.row.status
                   },
                   on: {
-                    click: () => {}
+                    'on-change': () => {
+                    let desc = params.row.status == 1 ? "禁用" : "启用";
+                    this.$Modal.confirm({
+                      title: "提示",
+                      content: "确定要" + desc + "该操作?",
+                      onOk: async () => {
+                        params.row.status = params.row.status == 1 ? 0 : 1;
+                        let result = await this.$api.saveOperate({
+													name: params.row.name,
+                          id: params.row.id,
+                          status: params.row.status,
+                          url: params.row.url,
+                          mid: params.row.mid
+                        });
+                        if (result) {
+                          this.$Notice.success({
+                            title: "提示",
+                            desc: "操作成功"
+                          });
+                          this.$refs["table"].fresh();
+                        }
+											},
+											onCancel: () => {
+												this.$refs["table"].fresh();
+											}
+                    });
+                  }
                   }
                 },
                 params.row.status_text
@@ -95,6 +122,9 @@ export default {
                   props: {
                     type: "error"
                   },
+                  style: {
+                    marginLeft: '5px'
+                  },
                   on: {
                     click: () => {
                       this.$Modal.confirm({
@@ -123,8 +153,8 @@ export default {
     };
   },
   methods: {
-    async fetchList(params) {
-      return [this.$this.$api.operateList, params];
+    fetchList(params) {
+      return [this.$api.operateList, params];
     }
   },
   mounted: function() {
