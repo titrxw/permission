@@ -10,6 +10,9 @@
       <FormItem label="别名" prop="alias">
         <Input v-model="form.alias" placeholder="请输入操作别名"></Input>
       </FormItem>
+      <FormItem label="图标">
+        <Input v-model="form.icon" placeholder="请输入模块图标"></Input>
+      </FormItem>
       <FormItem prop="mid" label="所属模块">
             <Select v-model="form.mid" style="margin-bottom:10px;">
               <Option
@@ -52,20 +55,14 @@ export default {
         url: "",
         mid: "",
         status: 1,
-        alias: ''
+        alias: '',
+        icon: ''
       },
       ruleValidate: {
         name: [
           {
             required: true,
             message: "请输入操作名称",
-            trigger: "blur"
-          }
-        ],
-        url: [
-          {
-            required: true,
-            message: "请输入操作链接",
             trigger: "blur"
           }
         ],
@@ -106,7 +103,8 @@ export default {
         url: "",
         mid: "",
         status: 1,
-        alias: ''
+        alias: '',
+        icon: ''
       };
       this.$emit("input", false);
     },

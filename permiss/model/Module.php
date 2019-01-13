@@ -25,12 +25,20 @@ class Module extends Model
             unset($data['id']);
             if (!empty($data['create_time'])) unset($data['create_time']);
             if (!empty($data['is_delete'])) unset($data['is_delete']);
-
+            $data['path'] = $this->db()->get($this->_table, 'path', ['unid' => $data['pid']]);
+            if (strpos($data['path'], $data['pid']) === false) {
+                $data['path'] .= ',' . $data['pid'];
+            }
+            trim($data['path'], ',');
+            
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
             //task执行强制对应用户下线
         } else {
             $data['unid'] = 'm-' . uniqueId();
             $data['create_time'] = time();
+            $data['path'] = $this->db()->get($this->_table, 'path', ['unid' => $data['pid']]) . ',' . $data['pid'];
+            trim($data['path'], ',');
+
             $result = $this->db()->insert($this->_table, $data);
         }
 

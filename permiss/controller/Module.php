@@ -41,7 +41,7 @@ class Module extends User
     public function listApi()
     {
         $result = $this->_moduleM->getAll();
-        return [200, tree($result)];
+        return [200, $this->tree->get($result)];
     }
 
     /**

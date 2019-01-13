@@ -15,13 +15,6 @@ class System extends User
      */
     public function menuApi()
     {
-        if ($this->user['name'] === 'admin') {
-            return [200, $this->conf->get('permiss')];
-        }
-    }
-
-    private function roleMenu()
-    {
-        return [];
+        return [200, $this->getMenu()];
     }
 }

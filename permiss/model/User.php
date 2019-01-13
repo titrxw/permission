@@ -79,15 +79,19 @@ class User extends Model
         return false;
     }
 
-    public function getPermiss($uid)
+    public function getMenu($roleId)
     {
-        $roles = $this->db()->select('user_role',['role' => ['role_id' => 'unid']], 'role_id', ['uid' => $uid,'status' => 1]);
-        if (!$roles) {
-            return [];
-        }
+        $mids = $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid'], 'mid', ['rid' => $roleId, 'status' => 1, 'is_delete' => 0, 'GROUP' => 'mid']]);
+        $menus = $this->db()->select('module', ['name', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $mids]);
+        $paths = \array_unique(\implode(',', \array_column($menus, 'path')));
+        $pmenus = $this->db()->select('module', ['name', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $paths]);
+        $amenus = \array_merge($menus, $pmenus);
 
-        $permiss = $this->db()->select('role_permiss',['permiss' => ['oid' => 'unid']], 'role_id', ['rid' => $roles, 'status' => 1]);
+        return $this->tree->get($amenus, 'menu');
+    }
 
-        return $permiss;
+    public function getOperate($roleId)
+    {
+        return $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid'], 'url', ['tid' => $roleId, 'status' => 1, 'is_delete' => 0]]);
     }
 }

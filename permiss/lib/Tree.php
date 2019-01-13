@@ -2,16 +2,30 @@
 
 namespace permiss\lib;
 
-class Tree
+use framework\base\Component;
+
+class Tree extends Component
 {
-    public function get($data, $key = 'pid', $value = 0)
+    protected $_pid;
+    protected $_value;
+    protected $_id;
+
+    protected function init()
     {
-        $data = array_combine(array_column($data,'id'), $data);
+        $this->_pid = $this->getValueFromConf('pid', 'pid');
+        $this->_value = $this->getValueFromConf('value', '0');
+        $this->_id = $this->getValueFromConf('id', 'unid');
+        $this->unInstall();
+    }
+
+    public function get($data,$childKey = 'children')
+    {
+        $data = array_combine(array_column($data,$this->_id), $data);
 
         foreach ($data as $item) {
-            $data[$item[$key]]['children'][] =& $data[$item['id']];
+            $data[$item[$this->_pid]][$childKey][] =& $data[$item[$this->_id]];
         }
 
-        return $data[$value];
+        return $data[$this->_value];
     }
 }
