@@ -37,9 +37,9 @@ class Job extends User
      * @method get
      * 
      */
-    public function listApi()
+    public function listApi($page = 1)
     {
-        $result = $this->_jobM->getAll();
+        $result = $this->_jobM->getAll($page);
         return [200, $result];
     }
 

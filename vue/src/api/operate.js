@@ -1,7 +1,7 @@
 import ajax from './axios'
 export default {
-    operateList() {
-        return ajax.get('operate/list')
+    operateList(params) {
+        return ajax.get('operate/list', params)
     },
     saveOperate(form) {
         return ajax.post('operate/save', { form })

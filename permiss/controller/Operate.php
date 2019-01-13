@@ -40,9 +40,9 @@ class Operate extends User
      * @method get
      *
      */
-    public function listApi()
+    public function listApi($page = 1)
     {
-        $result = $this->_operateM->getAll();
+        $result = $this->_operateM->getAll($page);
         return [200, $result];
     }
 

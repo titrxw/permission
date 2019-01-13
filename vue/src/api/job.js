@@ -1,7 +1,7 @@
 import ajax from './axios'
 export default {
-    jobList() {
-        return ajax.get('job/list')
+    jobList(params) {
+        return ajax.get('job/list', params)
     },
     saveJob(form) {
         return ajax.post('job/save', { form })
