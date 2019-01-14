@@ -49,7 +49,7 @@ class Module extends Model
 
             $result = $this->db()->insert($this->_table, $data);
         }
-        if ($result->rowCount() > 0) {
+        if ($result) {
             return true;
         }
 
@@ -67,7 +67,7 @@ class Module extends Model
 
     public function get($id)
     {
-        return $this->db()->get($this->_table, ['id', 'title', 'icon', 'desc', 'status','unid','url'], ['id' => $id, 'is_delete' => 0]);
+        return $this->db()->get($this->_table, ['id', 'title', 'icon', 'desc', 'status','unid','url'], ['id' => $id]);
     }
 
     public function delete($id)
@@ -76,11 +76,18 @@ class Module extends Model
         if ($has) {
             return false;
         }
-        $result = $this->db()->update($this->_table, ['is_delete' => 1], ['unid' => $id]);
-        if ($result->rowCount() > 0) {
-            $ids = $this->db()->select('operate','unid', ['mid' => $id]);
-            return $this->model('Operate')->delete($ids);
-        }
-        return false;
+        $flag = false;
+        $this->db()->action(function($database) use (&$flag, $id) {
+            $result = $this->db()->update($this->_table, ['is_delete' => 1], ['unid' => $id]);
+            if ($result) {
+                $ids = $this->db()->select('operate','unid', ['mid' => $id]);
+                $flag = $this->model('Operate')->delete($ids);
+            } else {
+                $flag = false;
+            }
+            return $flag;
+        });
+
+        return $flag;
     }
 }

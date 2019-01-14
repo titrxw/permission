@@ -15,46 +15,62 @@ class Role extends Model
 
     public function save($data)
     {
-        $auths = [];
-        if (isset($data['auths'])) {
-            $auths = $data['auths'];
-            unset($data['auths']);
-        }
-        if (!empty($data['id'])) {
-            $id = $data['id'];
-            unset($data['id']);
-            $result = $this->db()->update($this->_table, $data, ['id' => $id]);
-            //task执行强制对应用户下线
-        } else {
-            $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name']]);
-            if ($exists) {
-                return false;
+        $flag = false;
+        $this->db()->action(function($database) use (&$flag, $data) {
+            $auths = [];
+            if (isset($data['auths'])) {
+                $auths = $data['auths'];
+                unset($data['auths']);
+            }
+            if (!empty($data['id'])) {
+                $id = $data['id'];
+                unset($data['id']);
+                $result = $this->db()->update($this->_table, $data, ['id' => $id]);
+                //task执行强制对应用户下线
+            } else {
+                $exists = $this->db()->get($this->_table, 'id', ['name' => $data['name']]);
+                if ($exists) {
+                    return false;
+                }
+
+                $data['unid'] = 'r-' . uniqueId();
+                $data['create_time'] = time();
+                $result = $this->db()->insert($this->_table, $data);
             }
 
-            $data['unid'] = 'r-' . uniqueId();
-            $data['create_time'] = time();
-            $result = $this->db()->insert($this->_table, $data);
-        }
+            if ($result) {
+                if (!empty($auths)) {
+                    $result = $this->db()->delete('role_permiss', ['rid' => $data['unid']]);
+                    if (!$result) {
+                        $flag = false;
+                        return $flag;
+                    }
 
-        if ($result && $result->rowCount() > 0) {
-            if (!empty($auths)) {
-                $time = time();
-                foreach($auths as $key => $item) {
-                    $auths[$key] = [
-                        'oid' => $item,
-                        'create_time' => $time,
-                        'rid' => $data['unid']
-                    ];
+                    $time = time();
+                    foreach($auths as $key => $item) {
+                        $auths[$key] = [
+                            'oid' => $item,
+                            'create_time' => $time,
+                            'rid' => $data['unid']
+                        ];
+                    }
+                    $result = $this->db()->insert('role_permiss', $auths);
+                    if ($result) {
+                        $flag = true;
+                        return $flag;
+                    }
+                    $flag = false;
+                    return $flag;
                 }
-                $result = $this->db()->delete('role_permiss', ['rid' => $data['unid']]);
-                $result = $this->db()->insert('role_permiss', $auths);
-                if ($result && $result->rowCount() > 0) {
-                    return true;
-                }
-                return false;
+                $flag = true;
+                return $flag;
+            } else {
+                $flag = false;
+                return $flag;
             }
-            return true;
-        }
+        });
+
+        return $flag;
     }
 
     public function getAll($status)
@@ -68,7 +84,7 @@ class Role extends Model
 
     public function get($id)
     {
-        return $this->db()->get($this->_table, ['id', 'name', 'unid', 'status'], ['id' => $id, 'is_delete' => 0]);
+        return $this->db()->get($this->_table, ['id', 'name', 'unid', 'status'], ['id' => $id]);
     }
 
     public function delete($id)
@@ -89,12 +105,11 @@ class Role extends Model
 
         $mids = $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid']], 'mid', ['rid' => $roleId, 'status' => 1, 'is_delete' => 0, 'GROUP' => 'mid']);
         $menus = $this->db()->select('module', ['title(name)', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $mids]);
-        // var_dump($menus);
         $paths =\implode(',', \array_unique(\array_column($menus, 'path')));
         $paths = \array_values(\array_unique(explode(',', $paths)));
         $pmenus = $this->db()->select('module', ['title(name)', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $paths]);
         $amenus = \array_merge($menus, $pmenus);
-        // var_dump($pmenus);var_dump($amenus);
+        
         $amenus = $this->tree->get($amenus, 'menu');
         return $amenus['menu'] ?? [];
     }

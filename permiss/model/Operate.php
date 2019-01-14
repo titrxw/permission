@@ -34,7 +34,7 @@ class Operate extends Model
             //task执行强制对应用户下线
         }
 
-        if ($result->rowCount() > 0) {
+        if ($result) {
             return true;
         }
 
@@ -44,11 +44,11 @@ class Operate extends Model
     public function getPage($page = 1)
     {
         $total = $this->db()->count($this->_table, ['is_delete' => 0]);
-      if (!$total) {
-        return ['total'=>0, 'data'=>[]];
-      }
-      $data = $this->db()->select($this->_table, ['id', 'name', 'url', 'alias', 'status', 'mid'], ['is_delete' => 0,'LIMIT' => [($page - 1) * $this->_pageSize, $this->_pageSize]]);
-      return ['total'=>$total, 'data'=>$data];
+        if (!$total) {
+            return ['total'=>0, 'data'=>[]];
+        }
+        $data = $this->db()->select($this->_table, ['id', 'name', 'url', 'alias', 'status', 'mid'], ['is_delete' => 0,'LIMIT' => [($page - 1) * $this->_pageSize, $this->_pageSize]]);
+        return ['total'=>$total, 'data'=>$data];
     }
 
     public function getAllNormals()
@@ -58,7 +58,7 @@ class Operate extends Model
 
     public function get($id)
     {
-        return $this->db()->get($this->_table, '*', ['id' => $id, 'is_delete' => 0]);
+        return $this->db()->get($this->_table, '*', ['id' => $id]);
     }
 
     public function delete($id)
@@ -67,7 +67,7 @@ class Operate extends Model
             return true;
         }
         $result = $this->db()->update($this->_table, ['is_delete' => 1], ['unid' => $id]);
-        if ($result->rowCount() > 0) {
+        if ($result) {
             //task执行强制对应用户下线
             return true;
         }

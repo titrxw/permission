@@ -21,7 +21,7 @@
           </FormItem>
           <FormItem label="上级部门">
             <Select v-model="form.data.pid">
-              <Option :value="0">请选择</Option>
+              <Option value="0">请选择</Option>
               <Option
               :disabled="form.data.unid == item.unid"
                 :value="item.unid"
@@ -61,7 +61,7 @@ export default {
       buttonTxt: "添加",
       form: {
         data: {
-          pid: 0,
+          pid: '0',
           title: "",
           alias: "",
           status: 1
@@ -124,7 +124,7 @@ export default {
     // },
     reset() {
       this.form.data = {
-        pid: 0,
+        pid: '0',
         title: "",
         alias: "",
         status: 1

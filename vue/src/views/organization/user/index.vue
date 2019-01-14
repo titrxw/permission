@@ -24,7 +24,6 @@
 </template>
 <script>
 import Edit from "./edit.vue";
-import api from "@/api";
 import Table from "@/components/table";
 
 export default {
@@ -51,7 +50,7 @@ export default {
         {
           title: "姓名",
           align: "center",
-          key: "real_name",
+          key: "name",
           render: (h, params) => {
             return h(
               "a",
@@ -64,7 +63,7 @@ export default {
                   }
                 }
               },
-              params.row.real_name
+              params.row.name
             );
           }
         },
@@ -94,7 +93,8 @@ export default {
                 {
                   props: {
                     trueValue: 1,
-                    falseValue: 0
+                    falseValue: 0,
+                    value: params.row.status
                   },
                   on: {
                     click: () => {}
@@ -169,7 +169,7 @@ export default {
       }
       searchData["status"] = this.search_status;
 
-      return [api.managerList, params, searchData];
+      return [this.$api.userList, params, searchData];
     }
   },
   mounted() {

@@ -31,7 +31,7 @@ class Depart extends Model
         $result = $this->db()->insert($this->_table, $data);
       }
 
-      if ($result->rowCount() > 0) {
+      if ($result) {
         return true;
       }
 
@@ -49,13 +49,13 @@ class Depart extends Model
 
     public function get($id) 
     {
-        return $this->db()->get($this->_table, '*', ['id' => $id, 'is_delete' => 0]);
+        return $this->db()->get($this->_table, '*', ['id' => $id]);
     }
 
     public function delete($id) 
     {
         $result = $this->db()->update($this->_table, ['is_delete' => 1], ['id' => $id]);
-        if ($result->rowCount() > 0) {
+        if ($result) {
           return true;
         }
         return false;

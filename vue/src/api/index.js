@@ -5,6 +5,7 @@ import operate from './operate'
 import department from './department'
 import job from './job'
 import role from './role'
+import user from './user'
 
 let api = {
     ...auth,
@@ -13,7 +14,8 @@ let api = {
     ...operate,
     ...department,
     ...job,
-    ...role
+    ...role,
+    ...user
 }
 
 export default {
