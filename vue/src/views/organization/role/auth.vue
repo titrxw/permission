@@ -1,100 +1,46 @@
 <template>
   <div>
-    <Tabs>
-      <TabPane :label="item.title" v-for="(item, index) in auths" :key="index">
-        <table style="border-spacing: 0;border-collapse: collapse;border: 1px solid #cbd0db;width: 100%;margin-bottom: 20px;">
-          <tr v-for="(aitem, aindex) in item.children" :key="aindex">
-            <th style="padding: 8px 10px;border-right:1px solid #cbd0db;    width: 150px;">
-              <Checkbox
-                v-model="aitem.selected"
-                @click.native="moduleChange($event, index, aindex)"
-              >{{ aitem.title }}</Checkbox>
-            </th>
-            <td style="padding-left:15px;">
-              <div class="item" v-for="(bitem, bindex) in aitem.children" :key="bindex">
-                <Checkbox
-                  @click.native="itemChange($event, index, aindex, bindex)"
-                  v-model="bitem.selected"
-                >{{ bitem.title }}</Checkbox>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </TabPane>
-    </Tabs>
+    <Tree :data="auths" @on-check-change="selectItem" show-checkbox multiple></Tree>
   </div>
 </template>
 <script>
 export default {
+  props: {
+    value: {
+      type: [String, Number]
+    }
+  },
   data() {
     return {
-      auths: [
-        {
-          id: "",
-          title: "ewrwer",
-          children: [
-            {
-              id: "",
-              title: "werwer",
-              selected: false,
-              children: [
-                {
-                  title: "werwer",
-                  id: "",
-                  selected: false
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: "",
-          title: "ewrwe213213r",
-          children: [
-            {
-              id: "",
-              title: "wer2wer",
-              selected: false,
-              children: [
-                {
-                  title: "we3rwer",
-                  id: "",
-                  selected: false
-                },
-                {
-                  title: "werw4er123",
-                  id: "",
-                  selected: false
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      auths: [],
+      selected: []
     };
   },
   methods: {
-    moduleChange(event, pindex, index) {
-      event.preventDefault();
-      this.auths[pindex]["children"][index]["selected"] = !this.auths[pindex][
-        "children"
-      ][index]["selected"];
-      this.auths[pindex]["children"][index]["children"].forEach(Element => {
-        Element.selected = this.auths[pindex]["children"][index]["selected"];
+    selectItem(e) {
+      this.selected = [];
+      e.forEach(element => {
+        if (element.mid) {
+          this.selected.push(element.unid);
+        }
       });
-    },
-    itemChange(event, pindex, index, bindex) {
-      event.preventDefault();
-      this.auths[pindex]["children"][index]["children"][bindex][
-        "selected"
-      ] = !this.auths[pindex]["children"][index]["children"][bindex][
-        "selected"
-      ];
-      this.auths[pindex]["children"][index]["selected"] = this.auths[pindex][
-        "children"
-      ][index]["children"].every(Element => {
-        return Element.selected;
-      });
+      this.$emit("update", this.selected);
+    }
+  },
+  async mounted() {
+    let result = await this.$api.getPermiss(this.value);
+    if (result) {
+      this.auths = result.children;
+    }
+  },
+  watch: {
+    async value(val) {
+      if (val) {
+        let result = await this.$api.getPermiss(this.value);
+        if (result) {
+          this.auths = result.children;
+        }
+      }
     }
   }
 };
@@ -106,6 +52,6 @@ export default {
   float: left;
   font-size: 14px;
   height: 30px;
-    line-height: 30px;
+  line-height: 30px;
 }
 </style>

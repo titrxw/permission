@@ -15,10 +15,14 @@ class Role extends Model
 
     public function save($data)
     {
+        $auths = [];
+        if (isset($data['auths'])) {
+            $auths = $data['auths'];
+            unset($data['auths']);
+        }
         if (!empty($data['id'])) {
             $id = $data['id'];
             unset($data['id']);
-
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
             //task执行强制对应用户下线
         } else {
@@ -27,16 +31,30 @@ class Role extends Model
                 return false;
             }
 
-            $data['unid'] = 'j-' . uniqueId();
+            $data['unid'] = 'r-' . uniqueId();
             $data['create_time'] = time();
             $result = $this->db()->insert($this->_table, $data);
         }
 
-        if ($result->rowCount() > 0) {
+        if ($result && $result->rowCount() > 0) {
+            if (!empty($auths)) {
+                $time = time();
+                foreach($auths as $key => $item) {
+                    $auths[$key] = [
+                        'oid' => $item,
+                        'create_time' => $time,
+                        'rid' => $data['unid']
+                    ];
+                }
+                $result = $this->db()->delete('role_permiss', ['rid' => $data['unid']]);
+                $result = $this->db()->insert('role_permiss', $auths);
+                if ($result && $result->rowCount() > 0) {
+                    return true;
+                }
+                return false;
+            }
             return true;
         }
-
-        return false;
     }
 
     public function getAll($status)
@@ -45,12 +63,12 @@ class Role extends Model
         if (isset($status)) {
             $where['status'] = $status;
         }
-        return $this->db()->select($this->_table, '*', $where);
+        return ['data' => $this->db()->select($this->_table, ['id', 'name', 'unid', 'status'], $where)];
     }
 
     public function get($id)
     {
-        return $this->db()->get($this->_table, '*', ['id' => $id, 'is_delete' => 0]);
+        return $this->db()->get($this->_table, ['id', 'name', 'unid', 'status'], ['id' => $id, 'is_delete' => 0]);
     }
 
     public function delete($id)
@@ -69,13 +87,16 @@ class Role extends Model
             return [];
         }
 
-        $mids = $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid'], 'mid', ['rid' => $roleId, 'status' => 1, 'is_delete' => 0, 'GROUP' => 'mid']]);
-        $menus = $this->db()->select('module', ['name', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $mids]);
-        $paths = \array_unique(\implode(',', \array_column($menus, 'path')));
-        $pmenus = $this->db()->select('module', ['name', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $paths]);
+        $mids = $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid']], 'mid', ['rid' => $roleId, 'status' => 1, 'is_delete' => 0, 'GROUP' => 'mid']);
+        $menus = $this->db()->select('module', ['title(name)', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $mids]);
+        // var_dump($menus);
+        $paths =\implode(',', \array_unique(\array_column($menus, 'path')));
+        $paths = \array_values(\array_unique(explode(',', $paths)));
+        $pmenus = $this->db()->select('module', ['title(name)', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $paths]);
         $amenus = \array_merge($menus, $pmenus);
-
-        return $this->tree->get($amenus, 'menu');
+        // var_dump($pmenus);var_dump($amenus);
+        $amenus = $this->tree->get($amenus, 'menu');
+        return $amenus['menu'] ?? [];
     }
 
     public function getOperate($roleId)
@@ -84,7 +105,7 @@ class Role extends Model
             return [];
         }
         
-        return $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid'], ['url', 'mid', 'unid', 'name'], ['rid' => $roleId, 'status' => 1, 'is_delete' => 0]]);
+        return $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid']], ['url', 'mid', 'unid', 'name(title)'], ['rid' => $roleId, 'status' => 1, 'is_delete' => 0]);
     }
 }
 

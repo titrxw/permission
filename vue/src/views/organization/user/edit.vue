@@ -20,22 +20,21 @@
           </Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem prop="department_job" v-for="(items, index) in form.department_job" :key="index" label="部门">
+      <FormItem prop="department_job" v-for="(items, index) in form.department_job" :key="index" label="部门职位">
         <Row>
           <Col span="18">
             <Select v-model="items.department_id" style="margin-bottom:10px;">
               <Option
                 v-for="(itemd,indexd) in departments"
-                :value="itemd.id"
+                :value="itemd.unid"
                 :key="indexd"
-                :disabled="itemd.disabled"
               >{{ itemd.title }}</Option>
             </Select>
 
             <Select v-model="items.job_id">
               <Option
                 v-for="(itemr,indexr) in jobs"
-                :value="itemr.id"
+                :value="itemr.unid"
                 :key="indexr"
               >{{ itemr.name}}</Option>
             </Select>
@@ -44,6 +43,15 @@
             <Button @click="handleRemove(index)" type="error" v-if="false">删除</Button>
           </Col>
         </Row>
+      </FormItem>
+      <FormItem prop="role_id" label="角色">
+            <Select v-model="form.role_id" style="margin-bottom:10px;">
+              <Option
+                v-for="(itemd,indexd) in roles"
+                :value="itemd.unid"
+                :key="indexd"
+              >{{ itemd.name }}</Option>
+            </Select>
       </FormItem>
     </Form>
     <div slot="footer">
@@ -54,7 +62,6 @@
 </template>
 
 <script>
-import api from "@/api";
 import { formatTree } from "@/libs/tree";
 import FormValidate from "@/libs/formValidate";
 export default {
@@ -68,6 +75,7 @@ export default {
       show: false,
       departments: [],
       jobs: [],
+      roles: [],
       form: {
         real_name: "",
         mobile: "",
@@ -78,7 +86,8 @@ export default {
             department_id: null,
             job_id: null
           }
-        ]
+        ],
+        role_id: []
       },
       ruleValidate: {
         real_name: [
@@ -129,10 +138,10 @@ export default {
 
           if (this.rowId) {
             this.form.id = this.rowId;
-            result = await api.managerUpdate(this.form);
+            result = await this.$api.managerUpdate(this.form);
           } else {
             delete this.form.id;
-            result = await api.managerAdd(this.form);
+            result = await this.$api.managerAdd(this.form);
           }
 
           if (result) {
@@ -163,7 +172,7 @@ export default {
       this.$emit("input", false);
     },
     async info() {
-      let result = await api.managerDetail({ id: this.rowId });
+      let result = await this.$api.managerDetail({ id: this.rowId });
       if (result) {
         if (result.department_job.length <= 0) {
           result.department_job = [
@@ -186,15 +195,21 @@ export default {
       });
     },
     async getDepartment() {
-      let result = await api.departmentList();
+      let result = await this.$api.departmentList(1);
       if (result) {
         this.departments = formatTree(result.children);
       }
     },
     async getJobs() {
-      let result = await api.getJobs();
+      let result = await this.$api.jobList({status:1});
       if (result) {
         this.jobs = result.data;
+      }
+    },
+    async getRole() {
+      let result = await this.$api.roleList({status:1});
+      if (result) {
+        this.roles = result.data;
       }
     }
   },
@@ -204,6 +219,7 @@ export default {
         this.show = val;
         this.getJobs();
         this.getDepartment();
+        this.getRole();
         if (this.rowId > 0) {
           this.title = "员工编辑";
           this.info();

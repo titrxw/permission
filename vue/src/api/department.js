@@ -1,7 +1,7 @@
 import ajax from './axios'
 export default {
-    departmentList() {
-        return ajax.get('department/list')
+    departmentList(status = null) {
+        return ajax.get('department/list', {status})
     },
     saveDepartment(form) {
         return ajax.post('department/save', { form })

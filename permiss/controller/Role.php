@@ -74,7 +74,7 @@ class Role extends User
     /**
      * @method get
      */
-    public function getPermissApi($uid = '')
+    public function getPermissApi($role_id)
     {
         $modules = $this->model('Module')->getAll(1);
         $modules = \array_combine(\array_column($modules, 'unid'), $modules);
@@ -82,17 +82,28 @@ class Role extends User
         $operates = \array_combine(\array_column($operates, 'unid'), $operates);
 
         $userPermiss = [];
-        if ($uid) {
-            $userPermiss = $this->model('Role')->getOperate($this->model('User')->getRole($uid));
+        if ($role_id) {
+            $userPermiss = $this->model('Role')->getOperate($role_id);
+            $userPermiss = \array_combine(\array_column($userPermiss, 'unid'), $userPermiss);
             \array_walk($userPermiss, function (&$v) {
-                $v['selected'] = true;
+                $v['checked'] = true;
             });
         }
 
         $operates = \array_merge($operates, $userPermiss);
 
-        foreach($operates as $item) {
-            $modules[$item['mid']]['operates'][] = $item;
+        foreach($modules as &$mitem) {
+            $mitem['expand'] = true;
+            if (!isset($mitem['checked'])) {
+                $mitem['checked'] = false;
+            }
+        }
+        foreach($operates as &$item) {
+            $item['expand'] = true;
+            if (!isset($item['checked'])) {
+                $item['checked'] = false;
+            }
+            $modules[$item['mid']]['children'][] = $item;
         }
 
         return [200, $this->tree->get($modules)];

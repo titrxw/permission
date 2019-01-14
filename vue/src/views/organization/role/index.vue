@@ -3,12 +3,11 @@
 	<Table ref="table" title="角色管理" :columns="column" :getData="fetchList">
 		<Button slot="table-operate" type="success" @click.native="edit.id = 0;edit.show = true;">添加</Button>
 	</Table>
-	<Edit v-model="edit.show" :rowId="edit.id"></Edit>
+	<Edit v-model="edit.show" :rowId="edit.id" @update-list="$refs['table'].fresh()"></Edit>
 </div>
 </template>
 
 <script>
-import api from '@/api';
 import Table from '@/components/table';
 import Edit from './edit'
 export default {
@@ -43,7 +42,8 @@ export default {
                 {
                   props: {
                     trueValue: 1,
-                    falseValue: 0
+										falseValue: 0,
+										value: params.row.status
                   },
                   on: {
                     click: () => {}
@@ -76,8 +76,8 @@ export default {
 		}
 	},
 	methods : {
-		async fetchList(params) {
-			return [api.roleList, params]
+		fetchList(params) {
+			return [this.$api.roleList, params]
 		},
 	},
 	mounted: function() {

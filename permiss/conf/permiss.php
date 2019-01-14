@@ -80,6 +80,11 @@ return [
                     'permiss/Operate/list',
                     'permiss/Operate/save',
                     'permiss/Operate/get',
-                    'permiss/Operate/delete'
+                    'permiss/Operate/delete',
+                    'permiss/Role/list',
+                    'permiss/Role/save',
+                    'permiss/Role/get',
+                    'permiss/Role/delete',
+                    'permiss/Role/getPermiss'
                 ]
 ];

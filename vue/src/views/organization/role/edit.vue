@@ -13,14 +13,13 @@
       </FormItem>
     </Form>
     <Divider orientation="left">权限</Divider>
-    <Auth v-model="form.auths"></Auth>
+    <Auth @update="authUpdate" v-if="show" v-model="unid"></Auth>
     <div slot="footer">
       <Button type="primary" @click="submit">提交</Button>
     </div>
   </Modal>
 </template>
 <script>
-import api from "@/api";
 import Auth from "./auth";
 export default {
   props: {
@@ -35,6 +34,7 @@ export default {
         status: 0,
         auths: []
       },
+      unid:'',
       ruleValidate: {
         name: [
           {
@@ -50,24 +50,30 @@ export default {
     Auth
   },
   methods: {
-    close() {
+    reset() {
       this.form = {
-        name: "",
-        status: 0,
-        auths: []
-      };
+          name: "",
+          status: 0,
+          auths: []
+        };
+        this.unid = ''
+    },
+    close() {
+      this.rowId == 0 && this.reset();
       this.$emit("input", false);
+    },
+    authUpdate (data) {
+      this.form.auths = data
     },
     async submit() {
       this.$refs["auth"].validate(async valid => {
         if (valid) {
           if (this.rowId) {
             this.form.id = this.rowId
-            // update
           } else {
-            // add
+            delete this.form.id
           }
-          let res = true;
+          let res = await this.$api.saveRole(this.form);
           if (res) {
             this.$Notice.success({ title: "提示", desc: "操作成功" });
             this.$emit("update-list");
@@ -77,8 +83,9 @@ export default {
       });
     },
     async detail() {
-      let result = await api.roleInfo(this.rowId);
+      let result = await this.$api.getRole(this.rowId);
       if (result) {
+        this.unid = result.unid
         this.form = result;
       }
     }
@@ -86,8 +93,12 @@ export default {
   watch: {
     value: function(val) {
       this.show = val;
+    },
+    rowId (val) {
       if (val) {
         this.detail();
+      } else {
+        this.reset()
       }
     }
   }

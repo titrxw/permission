@@ -53,7 +53,7 @@ class Operate extends Model
 
     public function getAllNormals()
     {
-      $data = $this->db()->select($this->_table, ['id', 'name', 'unid', 'url', 'alias', 'status', 'mid'], ['is_delete' => 0, 'status' => 1]);
+      return $this->db()->select($this->_table, ['name(title)', 'unid', 'url', 'mid'], ['is_delete' => 0, 'status' => 1]);
     }
 
     public function get($id)

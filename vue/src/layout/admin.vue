@@ -6,27 +6,27 @@
         top: 60px;
         left: 0px;
         bottom: 0px;
-        width: 200px;
+        width: 240px;
         overflow: hidden;
         z-index: 999;
     }
     &.layout-mobile {
         .layout-nav {
-            width: 70px;
+            width: 240px;
             .layout-text {
                 display: none;
             }
         }
         .layout-main {
-            left: 70px;
+            left: 240px;
         }
         .logo {
-            width: 70px!important;
+            width: 240px!important;
         }
     }
     .layout-main {
         position: absolute;
-        left: 200px;
+        left: 240px;
         right: 0;
         top: 60px;
         bottom: 0;
@@ -79,7 +79,7 @@
             float: left;
             height: 60px;
             color: #fff;
-            width: 200px;
+            width: 240px;
             overflow: hidden;
             padding-right: 10px;
             padding-left: 10px;
@@ -126,7 +126,7 @@
     <div class="layout-header">
         <div class="logo">
             <a href="/">
-                    <span>相 寓</span>
+                    <span>权 限</span>
                 </a>
         </div>
         <div>

@@ -5,13 +5,13 @@
         <Submenu v-if="item.menu" :name="index + '-' + aindex">
           <template slot="title">
             <Icon :type="item.icon"/>
-            {{ item.text }}
+            {{ item.name }}
           </template>
           <tree-menu :shrink="shrink" :data="item.menu" :index="index + '-' + aindex+ '-c'"></tree-menu>
         </Submenu>
         <MenuItem v-else :name="index + '-' + aindex + '-'" @click.native="go(item.url)">
           <Icon :type="item.icon"></Icon>
-          {{ item.text }}
+          {{ item.name }}
         </MenuItem>
       </div>
     </Menu>
@@ -24,7 +24,7 @@
     >
       <DropdownItem :key="aindex" @click.native="item.menu? '' : go(item.url)">
         <Icon :type="item.icon"></Icon>
-        <span style="padding-left:10px;">{{ item.text }}</span>
+        <span style="padding-left:10px;">{{ item.name }}</span>
       </DropdownItem>
       <DropdownMenu
         v-if="item.menu"
@@ -53,7 +53,7 @@ export default {
     },
     shrink: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   methods: {

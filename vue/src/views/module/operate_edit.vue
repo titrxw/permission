@@ -101,7 +101,17 @@ export default {
         }
       });
     },
+    reset () {
+      this.form = {
+          name: "",
+          url: "",
+          mid: "",
+          status: 1,
+          alias: ""
+        };
+    },
     close() {
+      this.rowId == 0 && this.reset()
       this.show = false;
       this.$emit("input", false);
     },
@@ -114,14 +124,7 @@ export default {
     async getModules() {
       let result = await this.$api.moduleList();
       if (result) {
-        let tmp = formatTree(result.children);
-        result = [];
-        tmp.forEach((item, index) => {
-          if (item.level == 2) {
-            result.push(item)
-          }
-        })
-        this.modules = result
+        this.modules = formatTree(result.children);
       }
     }
   },
@@ -137,13 +140,7 @@ export default {
         this.title = "操作编辑";
         this.info();
       } else {
-        this.form = {
-          name: "",
-          url: "",
-          mid: "",
-          status: 1,
-          alias: ""
-        };
+        this.reset()
         this.title = "操作添加";
       }
     }

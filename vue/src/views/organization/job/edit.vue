@@ -41,7 +41,14 @@ export default {
     };
   },
   methods: {
+    reset() {
+      this.form = {
+          name: "",
+          status: 1
+        };
+    },
     close() {
+      this.rowId == 0 && this.reset()
       this.$emit("input", false);
     },
     async submit() {
@@ -76,10 +83,7 @@ export default {
       if (val) {
         this.detail();
       } else {
-        this.form = {
-          name: "",
-          status: 1
-        };
+        this.reset()
       }
     }
   }

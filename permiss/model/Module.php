@@ -44,7 +44,6 @@ class Module extends Model
                 $pdata = $this->db()->get($this->_table, ['path', 'level'], ['unid' => $data['pid']]);
                 $data['path'] = trim($pdata['path']. ',' . $data['pid'], ',');
                 $data['level'] = $pdata['level'] + 1;
-                var_dump($pdata);
             }
             
 
