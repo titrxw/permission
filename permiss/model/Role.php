@@ -109,12 +109,14 @@ class Role extends Model
         }
 
         $mids = $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid']], 'mid', ['rid' => $roleId, 'status' => 1, 'is_delete' => 0, 'GROUP' => 'mid']);
+        // \var_dump($mids);
         $menus = $this->db()->select('module', ['title(name)', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $mids]);
         $paths =\implode(',', \array_unique(\array_column($menus, 'path')));
+        // \var_dump($menus);
         $paths = \array_values(\array_unique(explode(',', $paths)));
         $pmenus = $this->db()->select('module', ['title(name)', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $paths]);
         $amenus = \array_merge($menus, $pmenus);
-        
+        // \var_dump($amenus);
         $amenus = $this->tree->get($amenus, 'menu');
         return $amenus['menu'] ?? [];
     }

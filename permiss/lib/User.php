@@ -63,17 +63,18 @@ abstract class User extends Web
             return $this->user['operates'];
         }
 
-        if ($this->user['name'] === 'admin') {
-            $userOperates = $this->conf->get('permiss.operate');
-        } else {
+        // if ($this->user['name'] === 'admin') {
+        //     $userOperates = $this->conf->get('permiss.operate');
+        // } else {
             $userOperates = $this->_roleM->getOperate($this->user['role']);
+            // \var_dump($userOperates);
             $this->user['operates_details'] = [];
             foreach ($userOperates as $key => $value) {
                 # code...
                 $this->user['operates_details'][$value['mid']][] = $value;
             }
             $userOperates = \array_column($userOperates, 'url');
-        }
+        // }
         $this->user['operates'] = $userOperates;
         $this->redis->set($this->request->request('token'), $this->user);
 
@@ -86,11 +87,11 @@ abstract class User extends Web
             return $this->user['menu'];
         }
         
-        if ($this->user['name'] === 'admin') {
-            $roleMenus = $this->conf->get('permiss.menu');
-        } else {
+        // if ($this->user['name'] === 'admin') {
+        //     $roleMenus = $this->conf->get('permiss.menu');
+        // } else {
             $roleMenus = $this->_roleM->getMenu($this->user['role']);
-        }
+        // }
         $this->user['menu'] = $roleMenus;
         $this->redis->set($this->request->request('token'), $this->user);
 
