@@ -27,7 +27,7 @@ axios.get = async(url, params, header = {}) => {
     if (Vue.beforeRequest) {
         Vue.beforeRequest()
     }
-    let result = await axios.tget(url, {params}, header)
+    let result = await axios.tget(url, { params }, header)
     if (Vue.afterRequest) {
         Vue.afterRequest(result)
     }
@@ -75,6 +75,7 @@ axios.interceptors.response.use(
             case 200:
                 return response.data.data ? response.data.data : true;
             case 301:
+            case 302:
                 Vue.storage.delete('user')
                 Vue.storage.delete('token')
                 router.push({ path: '/login' });

@@ -7,7 +7,7 @@
  */
 namespace permiss\model;
 
-use framework\base\Model;
+use framework\web\Model;
 
 class Module extends Model
 {

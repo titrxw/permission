@@ -67,6 +67,11 @@ abstract class User extends Web
             $userOperates = $this->conf->get('permiss.operate');
         } else {
             $userOperates = $this->_roleM->getOperate($this->user['role']);
+            $this->user['operates_details'] = [];
+            foreach ($userOperates as $key => $value) {
+                # code...
+                $this->user['operates_details'][$value['mid']][] = $value;
+            }
             $userOperates = \array_column($userOperates, 'url');
         }
         $this->user['operates'] = $userOperates;

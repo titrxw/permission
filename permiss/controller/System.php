@@ -17,4 +17,12 @@ class System extends User
     {
         return [200, $this->getMenu()];
     }
+
+    /**
+     * @method get
+     */
+    public function getModuleOperateApi($mid)
+    {
+        return [200, $this->user['operates_details'][$mid] ?? []];
+    }
 }

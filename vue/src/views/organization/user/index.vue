@@ -101,7 +101,7 @@ export default {
                       let desc = params.row.status == 1 ? "禁用" : "启用";
                       this.$Modal.confirm({
                         title: "提示",
-                        content: "确定要" + desc + "该操作?",
+                        content: "确定要" + desc + "该员工?",
                         onOk: async () => {
                           params.row.status = params.row.status == 1 ? 0 : 1;
                           let result = await this.$api.userStatus({
@@ -149,35 +149,35 @@ export default {
                 },
                 "编辑"
               ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginLeft: "10px"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        title: "提示",
-                        content: "确定要重置密码？",
-                        onOk: async () => {
-                          let result = await api.resettingPassword({
-                            id: param.row.id
-                          });
-                          if (result) {
-                            this.$Message.info("操作成功");
-                          }
-                        }
-                      });
-                    }
-                  }
-                },
-                "重置密码"
-              )
+              // h(
+              //   "Button",
+              //   {
+              //     props: {
+              //       type: "primary",
+              //       size: "small"
+              //     },
+              //     style: {
+              //       marginLeft: "10px"
+              //     },
+              //     on: {
+              //       click: () => {
+              //         this.$Modal.confirm({
+              //           title: "提示",
+              //           content: "确定要重置密码？",
+              //           onOk: async () => {
+              //             let result = await api.resettingPassword({
+              //               id: param.row.id
+              //             });
+              //             if (result) {
+              //               this.$Message.info("操作成功");
+              //             }
+              //           }
+              //         });
+              //       }
+              //     }
+              //   },
+              //   "重置密码"
+              // )
             ]);
           }
         }

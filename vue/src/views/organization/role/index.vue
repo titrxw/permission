@@ -56,7 +56,8 @@ export default {
                           let result = await this.$api.saveRole({
                             id: params.row.id,
 														status: params.row.status,
-														name: params.row.status
+														name: params.row.name,
+														unid: params.row.unid
                           });
                           if (result) {
                             this.$Notice.success({

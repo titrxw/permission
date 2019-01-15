@@ -1,9 +1,9 @@
 <?php
 namespace permiss\task;
 
-use framework\base\Component;
+use framework\task\BaseTask;
 
-class AuthChange extends Component
+class AuthChange extends BaseTask
 {
     public function module($unid)
     {
@@ -36,9 +36,14 @@ class AuthChange extends Component
         return $this->operateUpdate($unid);
     }
 
-    public function roleUpdate($unid)
+    public function roleUpdate($roles)
     {
         return $this->getUsersByRoles($roles);
+    }
+
+    public function userUpdate($unid)
+    {
+        $this->redis->set('auth-update-user-' . $unid, 1);
     }
 
     private function getRolesByOperate($operates)

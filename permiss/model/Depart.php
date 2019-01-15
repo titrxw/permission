@@ -7,7 +7,7 @@
  */
 namespace permiss\model;
 
-use framework\base\Model;
+use framework\web\Model;
 
 class Depart extends Model
 {
