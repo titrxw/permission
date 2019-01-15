@@ -16,10 +16,12 @@ class Operate extends Model
 
     public function save($data)
     {
+        $type= 'add';
         if (!empty($data['id'])) {
             $id = $data['id'];
             unset($data['id']);
 
+            $type= 'update';
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
             //task执行强制对应用户下线
         } else {
@@ -35,6 +37,9 @@ class Operate extends Model
         }
 
         if ($result) {
+            if ($type == 'update') {
+                $this->addTask('authTask', 'operateUpdate', $data['unid']);
+            }
             return true;
         }
 
@@ -69,6 +74,7 @@ class Operate extends Model
         $result = $this->db()->update($this->_table, ['is_delete' => 1], ['unid' => $id]);
         if ($result) {
             //task执行强制对应用户下线
+            $this->addTask('authTask', 'operateDelete', $id);
             return true;
         }
         return false;

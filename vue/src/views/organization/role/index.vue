@@ -46,7 +46,31 @@ export default {
 										value: params.row.status
                   },
                   on: {
-                    click: () => {}
+                    'on-change': () => {
+                      let desc = params.row.status == 1 ? "禁用" : "启用";
+                      this.$Modal.confirm({
+                        title: "提示",
+                        content: "确定要" + desc + "该操作?",
+                        onOk: async () => {
+                          params.row.status = params.row.status == 1 ? 0 : 1;
+                          let result = await this.$api.saveRole({
+                            id: params.row.id,
+														status: params.row.status,
+														name: params.row.status
+                          });
+                          if (result) {
+                            this.$Notice.success({
+                              title: "提示",
+                              desc: "操作成功"
+                            });
+                            this.$refs["table"].fresh();
+                          }
+                        },
+                        onCancel: () => {
+                          this.$refs["table"].fresh();
+                        }
+                      });
+                    }
                   }
                 },
                 params.row.status_text

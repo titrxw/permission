@@ -15,6 +15,7 @@ class Module extends Model
 
     public function save($data)
     {
+        $type = 'add';
         if (!empty($data['id'])) {
             $id = $data['id'];
             unset($data['id']);
@@ -26,7 +27,7 @@ class Module extends Model
                 $data['path'] = trim($pdata['path']. ',' . $data['pid'], ',');
                 $data['level'] = $pdata['level'] + 1;
             }
-            
+            $type = 'update';
             $result = $this->db()->update($this->_table, $data, ['id' => $id]);
             //task执行强制对应用户下线
         } else {
@@ -45,11 +46,12 @@ class Module extends Model
                 $data['path'] = trim($pdata['path']. ',' . $data['pid'], ',');
                 $data['level'] = $pdata['level'] + 1;
             }
-            
-
             $result = $this->db()->insert($this->_table, $data);
         }
         if ($result) {
+            if ($type == 'update') {
+                $this->addTask('authTask', 'module', $data['unid']);
+            }
             return true;
         }
 

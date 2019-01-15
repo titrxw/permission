@@ -38,6 +38,25 @@ class User extends \permiss\lib\User
     }
 
     /**
+     * @method post
+     * 
+     * @rule id|post|功能人错误 require
+     * @rule status|post|状态错误 integer
+     */
+    public function statusApi()
+    {
+        $id = $this->request->post('id');
+        $status = $this->request->post(status);
+
+        $result = $this->_userM->status($id, $status);
+        if ($result) {
+            return [200, true];
+        }
+
+        return [501, '状态修改失败'];
+    }
+
+    /**
      * @method get
      * 
      */

@@ -180,4 +180,9 @@ class User extends Model
         $data = $this->db()->select($this->_table, ['id', 'name', 'mobile', 'no', 'status'], ['LIMIT' => [($page - 1) * $this->_pageSize, $this->_pageSize]]);
         return ['total'=>$total, 'data'=>$data];
     }
+
+    public function status($id, $status)
+    {
+        return $this->db()->update($this->_table,['status' => $status], ['id' => $id]);
+    }
 }

@@ -16,7 +16,8 @@ class Role extends Model
     public function save($data)
     {
         $flag = false;
-        $this->db()->action(function($database) use (&$flag, $data) {
+        $type = 'add';
+        $this->db()->action(function($database) use (&$flag, $data,&$type) {
             $auths = [];
             if (isset($data['auths'])) {
                 $auths = $data['auths'];
@@ -25,6 +26,7 @@ class Role extends Model
             if (!empty($data['id'])) {
                 $id = $data['id'];
                 unset($data['id']);
+                $type = 'update';
                 $result = $this->db()->update($this->_table, $data, ['id' => $id]);
                 //task执行强制对应用户下线
             } else {
@@ -69,6 +71,9 @@ class Role extends Model
                 return $flag;
             }
         });
+        if ($flag && $type == 'update') {
+            $this->addTask('authTask', 'roleUpdate', $data['unid']);
+        }
 
         return $flag;
     }

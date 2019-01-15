@@ -8,5 +8,8 @@ export default {
     },
     getUser(id) {
         return ajax.get('user/get', { id })
+    },
+    userStatus (params) {
+        return ajax.post('user/status', { params })
     }
 }

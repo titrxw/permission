@@ -26,6 +26,13 @@ abstract class User extends Web
         $this->user = $user;
         $this->_roleM = $this->model('Role');
 
+        
+        if ($this->redis->has('auth-update-user-' . $this->user['unid'])) {
+            $this->redis->rm($token);
+            $this->redis->rm('auth-update-user-' . $this->user['unid']);
+            return [302, 'login false'];
+        }
+
         if (!$this->authCheck()) {
             return [400, 'auth failed'];
         }

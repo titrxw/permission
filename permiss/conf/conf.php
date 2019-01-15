@@ -16,7 +16,8 @@ return array(
         'password' => 'framework\\components\\security\\Password',
         'redis' => 'framework\\components\\cache\\File',
         'uniqueid' => 'framework\\components\\uniqueid\\UniqueId',
-        'tree' => 'permiss\\lib\\Tree'
+        'tree' => 'permiss\\lib\\Tree',
+        'authTask' => 'permiss\\task\\AuthChange'
     ), 
     'components' => array(
         'controller' => [
