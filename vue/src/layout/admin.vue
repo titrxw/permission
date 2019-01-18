@@ -6,22 +6,20 @@
         top: 60px;
         left: 0px;
         bottom: 0px;
-        width: 240px;
-        overflow: hidden;
+        // width: 240px;
         z-index: 999;
     }
     &.layout-mobile {
         .layout-nav {
-            width: 240px;
             .layout-text {
                 display: none;
             }
         }
         .layout-main {
-            left: 240px;
+            left: 60px;
         }
         .logo {
-            width: 240px!important;
+            width: 60px !important;
         }
     }
     .layout-main {
@@ -115,7 +113,6 @@
         }
         .toggle {
             height: 60px;
-            color: white;
             float: left;
         }
     }
@@ -131,7 +128,7 @@
         </div>
         <div>
             <Button type="text" class="toggle" @click="toggleClick">
-                    <Icon type="navicon" size="16"></Icon>
+                   </Icon><Icon type="md-menu" size="16"/>
                 </Button>
         </div>
         <div class="layout-top">
@@ -156,8 +153,8 @@
                 <router-view></router-view>
             </div>
         </div>
-        <p class="vm-author">相寓业务系统 designed by
-            <a href="#" target="_blank">相寓创研中心</a>
+        <p class="vm-author">业务系统 designed by
+            <a href="#" target="_blank">任雄伟</a>
         </p>
     </div>
     <Modal v-model="showChangePwdModal" title="修改密码" :mask-closable="false">

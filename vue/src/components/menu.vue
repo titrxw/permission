@@ -17,14 +17,14 @@
     </Menu>
     <Dropdown
       v-else
-      style="display: flex;flex-direction: column;width:auto;"
+      style="display: flex;flex-direction: column;width:auto;color:#fff;z-index:2000;min-width:60px;"
       placement="right-start"
       v-for="(item, aindex) in data"
       :key="aindex"
     >
-      <DropdownItem :key="aindex" @click.native="item.menu? '' : go(item.url)">
+      <DropdownItem class="drop-item" :key="aindex" @click.native="item.menu? '' : go(item.url)">
         <Icon :type="item.icon"></Icon>
-        <span style="padding-left:10px;">{{ item.name }}</span>
+        <span v-if="item.pid != 0" style="padding-left:10px;">{{ item.name }}</span>
       </DropdownItem>
       <DropdownMenu
         v-if="item.menu"
@@ -63,3 +63,9 @@ export default {
   }
 };
 </script>
+<style>
+  .drop-item{
+    height:50px;
+    line-height:50px;
+  }
+</style>
