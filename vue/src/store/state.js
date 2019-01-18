@@ -1,6 +1,8 @@
 const state = {
-  errMsg: '',
-  warnMsg: '' 
+    errMsg: '',
+    warnMsg: '',
+    moduleOperates: {},
+    moduleOperate: {}
 }
 
 export default state

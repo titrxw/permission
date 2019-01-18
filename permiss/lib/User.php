@@ -74,6 +74,8 @@ abstract class User extends Web
                 $this->user['operates_details'][$value['mid']][] = $value;
             }
             $userOperates = \array_column($userOperates, 'url');
+            $default = $this->conf->get('permiss.operate');
+            $userOperates = \array_merge($userOperates, $default ? $default : []);
         // }
         $this->user['operates'] = $userOperates;
         $this->redis->set($this->request->request('token'), $this->user);

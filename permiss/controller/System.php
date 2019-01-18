@@ -23,6 +23,9 @@ class System extends User
      */
     public function getModuleOperateApi($mid)
     {
-        return [200, $this->user['operates_details'][$mid] ?? []];
+        $operates = $this->user['operates_details'][$mid] ?? [];
+        $operates = \array_column($operates, 'alias');
+        $operates = \array_combine($operates, array_fill(0, \count($operates), true));
+        return [200, $operates];
     }
 }

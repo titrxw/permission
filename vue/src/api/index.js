@@ -20,6 +20,7 @@ let api = {
 
 export default {
     install: function(Vue) {
+        Vue.api = api
         Vue.prototype.$api = api
     }
 }

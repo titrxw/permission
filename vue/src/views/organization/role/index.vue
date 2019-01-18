@@ -1,7 +1,8 @@
 <template>
 <div>
 	<Table ref="table" title="角色管理" :columns="column" :getData="fetchList">
-		<Button slot="table-operate" type="success" @click.native="edit.id = 0;edit.show = true;">添加</Button>
+
+		<Button slot="table-operate" type="success" @click.native="edit.id = 0;edit.show = true;" v-if="moduleOperate['role_save']">添加</Button>
 	</Table>
 	<Edit v-model="edit.show" :rowId="edit.id" @update-list="$refs['table'].fresh()"></Edit>
 </div>
@@ -10,6 +11,7 @@
 <script>
 import Table from '@/components/table';
 import Edit from './edit'
+import { mapState } from 'vuex'
 export default {
 	components:{
 		Table,
@@ -99,6 +101,9 @@ export default {
 				},
 			]
 		}
+	},
+	computed: {
+		...mapState(['moduleOperate'])
 	},
 	methods : {
 		fetchList(params) {

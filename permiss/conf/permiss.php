@@ -65,29 +65,6 @@ return [
         ],
         'operate' => [
             'permiss/System/menu',
-            'permiss/Department/list',
-            'permiss/Department/save',
-            'permiss/Department/get',
-            'permiss/Department/delete',
-            'permiss/Job/list',
-            'permiss/Job/save',
-            'permiss/Job/get',
-            'permiss/Job/delete',
-            'permiss/Module/list',
-            'permiss/Module/save',
-            'permiss/Module/get',
-            'permiss/Module/delete',
-            'permiss/Operate/list',
-            'permiss/Operate/save',
-            'permiss/Operate/get',
-            'permiss/Operate/delete',
-            'permiss/Role/list',
-            'permiss/Role/save',
-            'permiss/Role/get',
-            'permiss/Role/delete',
-            'permiss/Role/getPermiss',
-            'permiss/User/list',
-            'permiss/User/save',
-            'permiss/User/get'
+            'permiss/System/getModuleOperate'
         ]
 ];

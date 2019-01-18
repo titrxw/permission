@@ -116,6 +116,9 @@ class Role extends Model
         $paths = \array_values(\array_unique(explode(',', $paths)));
         $pmenus = $this->db()->select('module', ['title(name)', 'url', 'icon', 'pid', 'unid', 'path'], ['unid' => $paths]);
         $amenus = \array_merge($menus, $pmenus);
+        foreach ($amenus as &$item) {
+            $item['url'] .= '?menu_mid=' . $item['unid'];
+        }
         // \var_dump($amenus);
         $amenus = $this->tree->get($amenus, 'menu');
         return $amenus['menu'] ?? [];
@@ -127,7 +130,7 @@ class Role extends Model
             return [];
         }
         
-        return $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid']], ['url', 'mid', 'unid', 'name(title)'], ['rid' => $roleId, 'status' => 1, 'is_delete' => 0]);
+        return $this->db()->select('role_permiss',['[><]operate' => ['oid' => 'unid']], ['url', 'mid', 'unid','alias', 'name(title)'], ['rid' => $roleId, 'status' => 1, 'is_delete' => 0]);
     }
 }
 

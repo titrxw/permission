@@ -186,7 +186,7 @@
 </template>
 <script>
 import sidebar from './sidebar';
-import api from '../api'
+import { mapActions } from 'vuex'
 export default {
     data() {
         const validatePass = (rule, value, callback) => {
@@ -227,14 +227,11 @@ export default {
             }
         }
     },
-    mounted() {
-        let user = sessionStorage.getItem('user');
-        if (user) {
-            user = JSON.parse(user);
-            this.sysUserName = user.real_name;
-        }
+    components: {
+        sidebar
     },
     methods: {
+        ...mapActions(['getOperate']),
         toggleClick() {
             this.toggle = !this.toggle;
         },
@@ -269,6 +266,11 @@ export default {
                     })
                 }
             });
+        },
+        operateInit () {
+            if (this.$route.query.menu_mid) {
+                this.getOperate(this.$route.query.menu_mid)
+            }
         }
     },
     watch: {
@@ -286,10 +288,18 @@ export default {
                 alert(val)
                 this.$store.commit('errMsg', '');
             }
+        },
+        '$route.query' (val) {
+            this.operateInit()
         }
     },
-    components: {
-        sidebar
-    }
+    mounted() {
+        this.operateInit()
+        let user = sessionStorage.getItem('user');
+        if (user) {
+            user = JSON.parse(user);
+            this.sysUserName = user.real_name;
+        }
+    },
 }
 </script>
