@@ -45,13 +45,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-.item {
-  display: block;
-  width: 220px;
-  float: left;
-  font-size: 14px;
-  height: 30px;
-  line-height: 30px;
-}
-</style>

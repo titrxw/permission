@@ -95,36 +95,6 @@ export default {
 								},
 								"编辑"
 							)
-							// h(
-              //   "Button",
-              //   {
-              //     props: {
-              //       type: "error"
-              //     },
-              //     style: {
-              //       marginLeft: '5px'
-              //     },
-              //     on: {
-              //       click: () => {
-              //         this.$Modal.confirm({
-              //           title: "提示",
-              //           content: "确定要删除该职位？",
-              //           onOk: async () => {
-              //             let result = await this.$api.deleteJob(params.row.id);
-              //             if (result) {
-              //               this.$Notice.success({
-              //                 title: "提示",
-              //                 desc: "操作删除成功"
-              //               });
-              //               this.$refs["table"].reload();
-              //             }
-              //           }
-              //         });
-              //       }
-              //     }
-              //   },
-              //   "删除"
-              // )
 						])
           }
         }
