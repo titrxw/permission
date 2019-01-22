@@ -6,6 +6,10 @@ const mutations = {
         state.warnMsg = msg;
     },
     MID_OPERATES(state, data) {
+        if (!data) {
+            state.moduleOperates = {}
+            return false
+        }
         state.moduleOperates[data.mid] = data.result
         state.moduleOperate = data.result
     },

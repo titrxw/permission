@@ -58,20 +58,27 @@ export default {
           {
             required: true,
             message: "请输入操作名称",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         url: [
           {
             required: true,
             message: "请输入链接",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         mid: [
           {
             required: true,
             message: "请选择所属模块",
+            trigger: "change"
+          }
+        ],
+        alias: [
+          {
+            required: true,
+            message: "请输入操作别名",
             trigger: "change"
           }
         ]
@@ -96,8 +103,8 @@ export default {
             title: "提示",
             desc: "操作成功"
           });
-          this.close();
           this.$emit("update-list", false);
+          this.close();
         }
       });
     },

@@ -44,6 +44,7 @@ export default {
         if (result) {
           let res = await this.$api.login(this.form);
           if (res) {
+            this.$store.dispatch('reset')
             this.$storage.set('token', res.token)
             this.$router.push('/')
           }
