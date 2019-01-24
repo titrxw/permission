@@ -27,16 +27,16 @@
       </Col>
       <Col span="18">
         <div>
-        <Page
-          class="page"
-          v-if="data.total"
-          :total="data.total"
-          show-total
-          show-elevator
-          :current="page"
-          @on-change="loadDataByPage"
-        ></Page>
-      </div>
+          <Page
+            class="page"
+            v-if="data.total"
+            :total="data.total"
+            show-total
+            show-elevator
+            :current.sync="page"
+            @on-change="loadDataByPage"
+          ></Page>
+        </div>
       </Col>
     </Row>
   </div>
@@ -48,15 +48,19 @@ export default {
       type: String,
       default: ""
     },
+    currentPage: {
+      type: [Number,String],
+      default: 1
+    },
     columns: {
       type: Array,
       default: function() {
         return [];
       }
     },
-    noDataText:{
-      type:String,
-      default:'暂无数据'
+    noDataText: {
+      type: String,
+      default: "暂无数据"
     },
     getData: {
       type: Function,
@@ -67,7 +71,10 @@ export default {
       default: null
     },
     search: {
-      type: Object
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   data() {
@@ -94,11 +101,11 @@ export default {
       if (!this.getData) {
         return false;
       }
-      this.loading = true
+      this.loading = true;
       let params = {
         page: this.page
       };
-      try{
+      try {
         let result = this.getData(params);
         params = result[1];
         if (this.isSearch && result[2]) {
@@ -107,7 +114,7 @@ export default {
         result = await result[0](params);
         if (result) {
           if (this.after) {
-            result = this.after(result)
+            result = this.after(result);
           }
           this.data = result;
         } else {
@@ -115,15 +122,15 @@ export default {
             data: [],
             total: 0
           };
-        }      
+        }
       } catch (e) {
-        this.$throw(e)
+        this.$throw(e);
       }
-      
-      this.loading = false
+
+      this.loading = false;
     },
     reload() {
-      this.isSearch = false
+      this.isSearch = false;
       this.page = 1;
       this.fetchList();
     },
@@ -134,21 +141,24 @@ export default {
       this.$refs.table.selectAll(status);
     },
     async doSearch() {
-      this.fromSearch = true
+      this.fromSearch = true;
       this.isSearch = true;
       this.page = 1;
       await this.fetchList();
-      this.fromSearch = false
+      this.fromSearch = false;
     }
   },
   watch: {
     search: {
-      deep:true,
+      deep: true,
       handler(val) {
-        if(!this.fromSearch) {
+        if (!this.fromSearch) {
           this.isSearch = false;
         }
       }
+    },
+    currentPage (val) {
+      this.page = parseInt(val)
     }
   }
 };
@@ -192,7 +202,7 @@ export default {
       margin: 10px;
     }
   }
-  
+
   .ivu-form-item {
     margin-bottom: 0px !important;
   }
