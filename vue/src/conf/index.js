@@ -3,6 +3,11 @@ import DevConf from './dev'
 import ProducationConf from './producation'
 
 Vue.onlineHour = 2
+Vue.errorReport = {
+    open: true,
+    url: 'common/frontLog'
+}
+
 
 if (process.env.NODE_ENV === 'production') {
     Vue.prototype.G = ProducationConf
