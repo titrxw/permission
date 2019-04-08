@@ -32,8 +32,8 @@
       <FormItem prop="job_id" label="职位">
           <Select v-model="form.job_id" style="margin-bottom:10px;">
             <Option
-              v-for="(itemd,indexd) in roles"
-              :value="itemd.unid"
+              v-for="(itemd,indexd) in jobs"
+              :value="itemd.id"
               :key="indexd"
             >{{ itemd.name }}</Option>
           </Select>
@@ -169,6 +169,7 @@ export default {
       let result = await this.$api.jobList({status:1});
       if (result) {
         this.jobs = result.data;
+        console.log(this.jobs)
       }
     },
     async getRole() {

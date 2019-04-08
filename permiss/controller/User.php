@@ -9,7 +9,7 @@ namespace permiss\controller;
 
 class User extends \permiss\lib\User
 {
-    private $_userM;
+    protected $_userM;
       
     protected function afterInit()
     {
