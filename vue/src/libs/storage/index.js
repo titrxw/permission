@@ -1,59 +1,59 @@
 /**
  * 推荐使用store.js
  */
-
 import Session from './driver/session'
 import Local from './driver/local'
-import Memory from './driver/memory'
 class Storage {
-    static
-    default
-    static session
-    static local
-    static prefx = ''
+  static default = null
+  static session = null
+  static local = null
+  static prefx = ''
 
-    constructor(prefx = '') {
-        this.prefx = prefx
-    }
+  constructor(prefx = '') {
+    this.prefx = prefx
+  }
 
-    get session() {
-        if (Storage.session) {
-            return Storage.session
-        }
-        Storage.session = new Session(this.prefx)
-        return Storage.session
+  get session () {
+    if (!Storage.session) {
+      Storage.session = new Session(this.prefx)
     }
 
-    get local() {
-        if (Storage.local) {
-            return Storage.local
-        }
-        Storage.local = new Local(this.prefx)
-        return Storage.local
-    }
+    return Storage.session
+  }
 
-    get default() {
-        if (Storage.default) {
-            return Storage.default
-        }
-        Storage.default = new Session(this.prefx)
-        return Storage.default
+  get local () {
+    if (!Storage.local) {
+      Storage.local = new Local(this.prefx)
     }
+    
+    return Storage.local
+  }
 
-    set(key, value) {
-        this.default.set(key, value)
+  get default () {
+    if (!Storage.default) {
+      Storage.default = new Session(this.prefx)
     }
-    get(key) {
-        return this.default.get(key)
-    }
-    delete(key) {
-        this.default.delete(key)
-    }
+    
+    return Storage.default
+  }
+
+  set (key, value, expire = 0) {
+    this.default.set(key, value, expire)
+  }
+  get (key, _default) {
+    return this.default.get(key, _default)
+  }
+  rm(key) {
+    this.default.rm(key)
+  }
+  clear() {
+    this.default.clear()
+  }
 }
 
 export default {
-    install: function(Vue) {
-        Vue.storage = new Storage('c')
-        Vue.prototype.$storage = Vue.storage
-    }
+  install: function (Vue) {
+    Vue.storage = new Storage('')
+    Vue.prototype.$storage = Vue.storage
+  }
 }

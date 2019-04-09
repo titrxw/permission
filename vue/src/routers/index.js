@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import axios from '@/api/axios'
 import VueRouter from 'vue-router';
 import Routers from './router';
 import login from './login'
@@ -10,6 +11,11 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    axios._cancelQueue.forEach(cancel => {
+        cancel()
+    })
+    axios._cancelQueue = [];
+
     let title = '生活服务'
     if (to.meta.title && to.meta.title !== '') {
         title = to.meta.title

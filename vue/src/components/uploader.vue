@@ -12,6 +12,7 @@
       ref="upload"
       :show-upload-list="false"
       :on-success="success"
+      :on-error="error"
       :format="format"
       :max-size="2048"
       :on-format-error="format_error"
@@ -78,6 +79,12 @@ export default {
       }
 
       this.$emit("input", this.urls);
+    },
+    error () {
+      this.$Notice.warning({
+        title: "提示",
+        desc: " 文件上传失败"
+      });
     },
     format_error() {
       this.$Notice.warning({

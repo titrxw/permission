@@ -20,7 +20,9 @@
       :no-data-text="noDataText"
       :columns="columns"
       :data="data.data"
+      :row-class-name="rowClassName"
     ></Table>
+
     <Row class="foot-toolbar" type="flex" justify="space-between">
       <Col span="6">
         <slot name="foot-operate"></slot>
@@ -75,6 +77,12 @@ export default {
       default: function () {
         return {}
       }
+    },
+    rowClassName: {
+        type: Function,
+        default () {
+            return '';
+        }
     }
   },
   data() {
@@ -105,26 +113,24 @@ export default {
       let params = {
         page: this.page
       };
-      try {
-        let result = this.getData(params);
-        params = result[1];
-        if (this.isSearch && result[2]) {
-          params = { ...params, ...result[2] };
+      
+      let result = this.getData(params);
+      params = result[1];
+      if (this.isSearch && result[2]) {
+        params = { ...params, ...result[2] };
+      }
+      result = await result[0](params);
+      if (result) {
+        this.page = parseInt(params['page'])
+        if (this.after) {
+          result = this.after(result);
         }
-        result = await result[0](params);
-        if (result) {
-          if (this.after) {
-            result = this.after(result);
-          }
-          this.data = result;
-        } else {
-          this.data = {
-            data: [],
-            total: 0
-          };
-        }
-      } catch (e) {
-        this.$throw(e);
+        this.data = result;
+      } else {
+        this.data = {
+          data: [],
+          total: 0
+        };
       }
 
       this.loading = false;
@@ -184,12 +190,13 @@ export default {
       justify-content: flex-end;
       align-items: center;
       margin-left: 10px;
-    }
-    .ivu-form-inline .ivu-form-item {
-      margin-right: 0px;
-    }
-    .table-toolbar .table-bar .search-bar .ivu-form-item {
-      margin-bottom: 0;
+      .ivu-form-item {
+        margin-right: 0px;
+        margin-bottom: 0px !important;
+        .ivu-btn{
+          margin-left: 10px;
+        }
+      }
     }
   }
   .foot-toolbar {
@@ -201,10 +208,6 @@ export default {
       text-align: right;
       margin: 10px;
     }
-  }
-
-  .ivu-form-item {
-    margin-bottom: 0px !important;
   }
   .ivu-radio-group {
     margin-right: 10px;

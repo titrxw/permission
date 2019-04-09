@@ -44,8 +44,9 @@ export default {
         if (result) {
           let res = await this.$api.login(this.form);
           if (res) {
+            this.$storage.set("user", result, 86400000);
+            this.$storage.set("token", result.token, 86400000);
             this.$store.dispatch('reset')
-            this.$storage.set('token', res.token)
             this.$router.push('/')
           }
         }

@@ -257,8 +257,7 @@ export default {
                 content: '确认退出吗?',
                 onOk: () => {
                     api.logout().then( res => {
-                        sessionStorage.removeItem('user');
-                        sessionStorage.removeItem('token');
+                        this.$storage.clear();
                         _this.$router.push('/login');
                     })
                 }
